@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Compass
 //
-//  Created by Csabi on 20/08/2018.
+//  Created by Csaba Gyorfi on 20/08/2018.
 //  Copyright © 2018 Csabi. All rights reserved.
 //
 
