@@ -15,10 +15,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var ArrowImage: UIImageView!
     @IBOutlet weak var degreeLabel: UITextField!
     
-    public var trueHeading: CGFloat = 0
-    let locationDelegate = LocationDelegate()
     var locationManager = CLLocationManager()
-    var latestLocation: CLLocation? = nil
    
     func initLocationManager() {
         

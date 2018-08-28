@@ -12,10 +12,8 @@
 		405E2196212B0151009B1062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405E2194212B0151009B1062 /* Main.storyboard */; };
 		405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 405E2197212B0151009B1062 /* Compass.xcdatamodeld */; };
 		405E219B212B0153009B1062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405E219A212B0153009B1062 /* Assets.xcassets */; };
-		405E219E212B0153009B1062 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 405E219C212B0153009B1062 /* LaunchScreen.storyboard */; };
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
 		405E21A9212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png in Resources */ = {isa = PBXBuildFile; fileRef = 405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */; };
-		405E21AB212C76D4009B1062 /* LocationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405E21AA212C76D4009B1062 /* LocationDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,11 +23,9 @@
 		405E2195212B0151009B1062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		405E2198212B0151009B1062 /* Compass.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Compass.xcdatamodel; sourceTree = "<group>"; };
 		405E219A212B0153009B1062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		405E219D212B0153009B1062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		405E219F212B0153009B1062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		405E21A6212B03E2009B1062 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pict--left-arrow-sales-arrows-vector-stencils-library.png"; sourceTree = SOURCE_ROOT; };
-		405E21AA212C76D4009B1062 /* LocationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,10 +62,8 @@
 			children = (
 				405E2190212B0151009B1062 /* AppDelegate.swift */,
 				405E2192212B0151009B1062 /* ViewController.swift */,
-				405E21AA212C76D4009B1062 /* LocationDelegate.swift */,
 				405E2194212B0151009B1062 /* Main.storyboard */,
 				405E219A212B0153009B1062 /* Assets.xcassets */,
-				405E219C212B0153009B1062 /* LaunchScreen.storyboard */,
 				405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */,
 				405E219F212B0153009B1062 /* Info.plist */,
 				405E2197212B0151009B1062 /* Compass.xcdatamodeld */,
@@ -143,7 +137,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				405E219E212B0153009B1062 /* LaunchScreen.storyboard in Resources */,
 				405E21A9212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png in Resources */,
 				405E219B212B0153009B1062 /* Assets.xcassets in Resources */,
 				405E2196212B0151009B1062 /* Main.storyboard in Resources */,
@@ -158,7 +151,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				405E2193212B0151009B1062 /* ViewController.swift in Sources */,
-				405E21AB212C76D4009B1062 /* LocationDelegate.swift in Sources */,
 				405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */,
 				405E2191212B0151009B1062 /* AppDelegate.swift in Sources */,
 			);
@@ -173,14 +165,6 @@
 				405E2195212B0151009B1062 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		405E219C212B0153009B1062 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				405E219D212B0153009B1062 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
