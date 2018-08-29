@@ -41,7 +41,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(6.28-radiants))
         }
         degreeLabel.text = String(newHeading.trueHeading)
-        //print(radiants)
     }
     
     
@@ -49,7 +48,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 
