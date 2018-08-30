@@ -12,11 +12,32 @@ import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
 
+    var locationManager = CLLocationManager()
+    var currentLocation: CLLocation? = nil;
+    
     @IBOutlet weak var ArrowImage: UIImageView!
     @IBOutlet weak var degreeLabel: UITextField!
     
-    var locationManager = CLLocationManager()
-   
+    @IBAction func popLocationButton(_ sender: UIButton) {
+        
+        var latitude: CLLocationDegrees;
+        var longitude: CLLocationDegrees;
+        
+        if currentLocation?.coordinate.latitude != nil {
+         
+            latitude = currentLocation!.coordinate.latitude
+            
+            if currentLocation?.coordinate.longitude != nil {
+                
+                longitude = currentLocation!.coordinate.longitude
+                let userLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                
+                print(userLocation.latitude)
+                print(userLocation.longitude)
+            }
+        }
+    }
+    
     func initLocationManager() {
         
         locationManager.delegate = self
@@ -41,6 +62,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(6.28-radiants))
         }
         degreeLabel.text = String(newHeading.trueHeading)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        currentLocation = locations[0];
+        
     }
     
     
