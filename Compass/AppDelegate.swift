@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,8 +18,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        Parse.enableLocalDatastore()
+        //find parse
+        let parseConfig = ParseClientConfiguration(block:  {(ParseMutableClientConfiguration) -> Void in
+            ParseMutableClientConfiguration.applicationId = "492795c6ea25112881915677092fb19d95f43ce0"
+            ParseMutableClientConfiguration.clientKey = "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028"
+            ParseMutableClientConfiguration.server = "http://18.188.82.67:80/parse"
+        })
+        
+        Parse.initialize(with: parseConfig)
+        PFUser.enableAutomaticUser()
+        let defaultACL = PFACL()
+        defaultACL.hasPublicReadAccess = true
+        
+        PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
+        
         return true
     }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let installation = PFInstallation.current()
+        installation?.setDeviceTokenFrom(deviceToken)
+        installation?.saveInBackground()
+        
+        PFPush.subscribeToChannel(inBackground: "") { (succeeded, error) in // (succeeded: Bool, error: NSError?) is now (succeeded, error)
+            
+            if succeeded {
+                print("ParseStarterProject successfully subscribed to push notifications on the broadcast channel.\n");
+            } else {
+                print("ParseStarterProject failed to subscribe to push notifications on the broadcast channel with error = %@.\n", error ?? 0)
+            }
+        }
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -72,6 +105,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        if error.code == 3010 {
+            print("Push notifications are not supported in the iOS Simulator.\n")
+        } else {
+            print("application:didFailToRegisterForRemoteNotificationsWithError: %@\n", error)
+        }
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        PFPush.handle(userInfo)
+        if application.applicationState == UIApplicationState.inactive {
+            PFAnalytics.trackAppOpened(withRemoteNotificationPayload: userInfo)
+        }
+    }
+    
 
     // MARK: - Core Data Saving support
 
