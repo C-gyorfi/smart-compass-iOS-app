@@ -83,19 +83,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
 
     func testParseServer() {
-         let testObject = PFObject(className: "TESTING")
-        testObject["testKey"] = "compass app data"
+        let testObject = PFObject(className: "TESTING")
+        testObject["AnotherObject"] = 222
         testObject.saveInBackground { (success, error) -> Void in
-            if success {
                 print("SAVED!!!!")
-            } else {
-                if error != nil {
-                    print (error)
-                } else {
-                    print ("ERROR")
-                }
-            }
         }
+        
+    
     }
 }
 
