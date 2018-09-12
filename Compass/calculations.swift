@@ -4,7 +4,6 @@
 //
 //  Created by Csabi on 03/09/2018.
 //  Copyright © 2018 Csabi. All rights reserved.
-//  Taken from stackoverflow...
 
 import Foundation
 import CoreLocation

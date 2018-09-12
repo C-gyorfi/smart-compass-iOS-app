@@ -43,7 +43,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initLocationManager()
-        testParseServer()
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -74,7 +74,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        currentLocation = locations[0];
+        currentLocation = locations[0]
+        if currentLocation != nil {
+            let point = PFGeoPoint (location: currentLocation)
+            saveToParseServer(classN: "Loc", key: "userName", data: point)
+        }
         
     }
 
@@ -82,14 +86,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func testParseServer() {
-        let testObject = PFObject(className: "TESTING")
-        testObject["AnotherObject"] = 222
-        testObject.saveInBackground { (success, error) -> Void in
+    //this needs to go in a new file, what's the best to do this?
+    func saveToParseServer(classN: String, key: String, data: Any) {
+        let saveObject = PFObject(className: classN)
+        saveObject[key] = data
+        saveObject.saveInBackground { (success, error) -> Void in
                 print("SAVED!!!!")
         }
-        
-    
     }
 }
 
