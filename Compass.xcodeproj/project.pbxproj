@@ -15,6 +15,7 @@
 		405E219B212B0153009B1062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405E219A212B0153009B1062 /* Assets.xcassets */; };
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
 		405E21A9212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png in Resources */ = {isa = PBXBuildFile; fileRef = 405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */; };
+		40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD4D2149766500340F9F /* ParseServer.swift */; };
 		40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		405E219F212B0153009B1062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		405E21A6212B03E2009B1062 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pict--left-arrow-sales-arrows-vector-stencils-library.png"; sourceTree = SOURCE_ROOT; };
+		40A2BD4D2149766500340F9F /* ParseServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseServer.swift; sourceTree = "<group>"; };
 		40ECDF0121413EEA00B1947D /* Calculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculations.swift; sourceTree = "<group>"; };
 		5C93EAD26B3404DDD750A73B /* Pods-Compass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Compass.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Compass/Pods-Compass.debug.xcconfig"; sourceTree = "<group>"; };
 		97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Compass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +73,7 @@
 				405E2190212B0151009B1062 /* AppDelegate.swift */,
 				405E2192212B0151009B1062 /* ViewController.swift */,
 				40ECDF0121413EEA00B1947D /* Calculations.swift */,
+				40A2BD4D2149766500340F9F /* ParseServer.swift */,
 				405E2194212B0151009B1062 /* Main.storyboard */,
 				405E219A212B0153009B1062 /* Assets.xcassets */,
 				405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */,
@@ -215,6 +218,7 @@
 				405E2193212B0151009B1062 /* ViewController.swift in Sources */,
 				405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */,
 				405E2191212B0151009B1062 /* AppDelegate.swift in Sources */,
+				40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */,
 				40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,7 +360,10 @@
 				DEVELOPMENT_TEAM = 7K888B9TC5;
 				INFOPLIST_FILE = Compass/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.caudio.Compass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -373,7 +380,10 @@
 				DEVELOPMENT_TEAM = 7K888B9TC5;
 				INFOPLIST_FILE = Compass/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.caudio.Compass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

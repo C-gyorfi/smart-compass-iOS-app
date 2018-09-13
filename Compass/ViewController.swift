@@ -15,12 +15,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation? = nil
     var targetLocation: CLLocation? = nil
+    let par = PServer()
     let myCalc = Calculations()
+    var myUserData = UserData()
     
     @IBOutlet weak var ArrowImage: UIImageView!
     @IBOutlet weak var degreeLabel: UITextField!
     
-
     @IBAction func popLocationButton(_ sender: UIButton) {
         
         if currentLocation?.coordinate.latitude != nil && currentLocation?.coordinate.longitude != nil  {
@@ -31,6 +32,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func initLocationManager() {
         
+        par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
+        myUserData.name = "SomeName"
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
@@ -74,12 +77,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        currentLocation = locations[0]
-        if currentLocation != nil {
-            let point = PFGeoPoint (location: currentLocation)
-            saveToParseServer(classN: "Loc", key: "userName", data: point)
+        myUserData.location = locations[0]
+        if myUserData.location != nil {
+            
+            par.saveUserLocation(classN: "Users", uData: myUserData)
+            let userdata = UserDefaults.standard.object(forKey: "objectID")
+            print(userdata as! String)
         }
-        
     }
 
     override func didReceiveMemoryWarning() {
