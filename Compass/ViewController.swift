@@ -25,7 +25,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBAction func popLocationButton(_ sender: UIButton) {
         
         if currentLocation?.coordinate.latitude != nil && currentLocation?.coordinate.longitude != nil  {
-         
             targetLocation = currentLocation
         }
     }
@@ -33,20 +32,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     func initLocationManager() {
         
         par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
-        myUserData.name = "SomeName"
+        
+        //This code will go to login page ViewController
+        myUserData.name = "Test Name"
+        par.saveUserLocation(classN: "Users", uData: myUserData)
+        if let tempID = UserDefaults.standard.string(forKey: "parseObjectID") {
+            myUserData.objectID = tempID
+        } else { myUserData.objectID = "NoID" }
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
-        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initLocationManager()
-        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -56,7 +60,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         //if target is nil, arrow will point to north
         if targetLocation == nil {
         UIView.animate(withDuration: 0.5) {
-            self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(6.28-headingR))
+        self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(6.28-headingR))
         }
         degreeLabel.text = String(newHeading.trueHeading)
         }
@@ -66,37 +70,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             let dirRadiant = self.myCalc.degreesToRadians(degrees: myCalc.getBearingBetweenTwoPoints1(point1: currentLocation!, point2: targetLocation!))
             
             UIView.animate(withDuration: 0.5) {
-                self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat((6.28 - headingR) + dirRadiant))
+                //now it should point towards the target location in case the device points towards north -> test this
+                self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(dirRadiant - headingR))
             }
-            
             degreeLabel.text = String(dirRadiant)
         }
-        
     }
     
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        currentLocation = locations[0]
         myUserData.location = locations[0]
-        if myUserData.location != nil {
-            
-            par.saveUserLocation(classN: "Users", uData: myUserData)
-            let userdata = UserDefaults.standard.object(forKey: "objectID")
-            print(userdata as! String)
-        }
+            if par.updateUserLocation(classN: "Users", uData: myUserData) {
+                print("Current object id = \(myUserData.objectID)")
+            } else {
+                if let tempID = UserDefaults.standard.string(forKey: "parseObjectID") {
+                myUserData.objectID = tempID
+                    }
+            }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-
-    //this needs to go in a new file, what's the best to do this?
-    func saveToParseServer(classN: String, key: String, data: Any) {
-        let saveObject = PFObject(className: classN)
-        saveObject[key] = data
-        saveObject.saveInBackground { (success, error) -> Void in
-                print("SAVED!!!!")
-        }
     }
 }
 

@@ -34,31 +34,46 @@ class PServer {
         let saveObject = PFObject(className: classN)
         saveObject["UserName"] = uData.name
         saveObject["Location"] = PFGeoPoint(location: uData.location)
+        //object ID is being returned before updated because its saving in BG
         saveObject.saveInBackground { (success, error) -> Void in
             if error != nil { print(error ?? "Something went wrong...")
             }
             else {
-                UserDefaults.standard.set(saveObject.objectId, forKey: "objectID")
-                print("Location saved to server") }
+                UserDefaults.standard.set(saveObject.objectId, forKey: "parseObjectID")
+                print("Location saved to server")
+            }
         }
     }
     
-    func fetchUserData(classN: String, uData: UserData) {
+    func updateUserLocation(classN: String, uData: UserData) -> Bool {
+        var isUpdated = false
         let quiery = PFQuery(className: classN)
-        quiery.getObjectInBackground(withId: uData.name, block: { (object, error) in
+        quiery.getObjectInBackground(withId: uData.objectID, block: { (object, error) in
             if error != nil {
                 print(error ?? "Failed to fetch data")
             } else {
                 if let newUserData = object {
-                print(newUserData)}
+                    newUserData["Location"] = PFGeoPoint(location: uData.location)
+                    newUserData.saveInBackground(block: { (sucess, error) in
+                        if error != nil {
+                            print(error ?? "Failed to update data")
+                        }
+                        else {
+                            isUpdated = true
+                            print("Location updated for user: \(uData.name)")
+                        }
+                    })
+                }
             }
         })
+      return isUpdated
     }
 }
 
 class UserData {
     //best practice to use get/set?
     var name = String()
-    
+    var password = String()
     var location = CLLocation()
+    var objectID = String()
 }

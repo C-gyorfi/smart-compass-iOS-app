@@ -16,24 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        
-//        Parse.enableLocalDatastore()
-//        //find parse
-//        let parseConfig = ParseClientConfiguration(block:  {(ParseMutableClientConfiguration) -> Void in
-//            ParseMutableClientConfiguration.applicationId = "492795c6ea25112881915677092fb19d95f43ce0"
-//            ParseMutableClientConfiguration.clientKey = "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028"
-//            ParseMutableClientConfiguration.server = "http://18.188.82.67:80/parse"
-//        })
-//
-//        Parse.initialize(with: parseConfig)
-//        PFUser.enableAutomaticUser()
-//        let defaultACL = PFACL()
-//        defaultACL.hasPublicReadAccess = true
-//
-//        PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
-        
+        // Override point for customization after application launch.        
         return true
     }
     
