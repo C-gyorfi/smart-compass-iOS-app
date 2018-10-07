@@ -16,8 +16,20 @@
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
 		405E21A9212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png in Resources */ = {isa = PBXBuildFile; fileRef = 405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */; };
 		40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD4D2149766500340F9F /* ParseServer.swift */; };
+		40A2BD56214ABBD000340F9F /* CalculationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD55214ABBD000340F9F /* CalculationsTest.swift */; };
+		40A2BD5D214ABF4E00340F9F /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
 		40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		40A2BD58214ABBD000340F9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 405E2185212B0151009B1062 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 405E218C212B0151009B1062;
+			remoteInfo = Compass;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		405E218D212B0151009B1062 /* Compass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compass.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +42,9 @@
 		405E21A6212B03E2009B1062 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		405E21A8212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pict--left-arrow-sales-arrows-vector-stencils-library.png"; sourceTree = SOURCE_ROOT; };
 		40A2BD4D2149766500340F9F /* ParseServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseServer.swift; sourceTree = "<group>"; };
+		40A2BD53214ABBD000340F9F /* CompassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CompassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		40A2BD55214ABBD000340F9F /* CalculationsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationsTest.swift; sourceTree = "<group>"; };
+		40A2BD57214ABBD000340F9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40ECDF0121413EEA00B1947D /* Calculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculations.swift; sourceTree = "<group>"; };
 		5C93EAD26B3404DDD750A73B /* Pods-Compass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Compass.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Compass/Pods-Compass.debug.xcconfig"; sourceTree = "<group>"; };
 		97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Compass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +61,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		40A2BD50214ABBD000340F9F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -53,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				405E218F212B0151009B1062 /* Compass */,
+				40A2BD54214ABBD000340F9F /* CompassTests */,
 				405E218E212B0151009B1062 /* Products */,
 				405E21A5212B03E2009B1062 /* Frameworks */,
 				70E92E920846F01D7A98F0FF /* Pods */,
@@ -63,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				405E218D212B0151009B1062 /* Compass.app */,
+				40A2BD53214ABBD000340F9F /* CompassTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,6 +114,15 @@
 				97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		40A2BD54214ABBD000340F9F /* CompassTests */ = {
+			isa = PBXGroup;
+			children = (
+				40A2BD55214ABBD000340F9F /* CalculationsTest.swift */,
+				40A2BD57214ABBD000340F9F /* Info.plist */,
+			);
+			path = CompassTests;
 			sourceTree = "<group>";
 		};
 		70E92E920846F01D7A98F0FF /* Pods */ = {
@@ -123,6 +156,24 @@
 			productReference = 405E218D212B0151009B1062 /* Compass.app */;
 			productType = "com.apple.product-type.application";
 		};
+		40A2BD52214ABBD000340F9F /* CompassTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40A2BD5A214ABBD100340F9F /* Build configuration list for PBXNativeTarget "CompassTests" */;
+			buildPhases = (
+				40A2BD4F214ABBD000340F9F /* Sources */,
+				40A2BD50214ABBD000340F9F /* Frameworks */,
+				40A2BD51214ABBD000340F9F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				40A2BD59214ABBD000340F9F /* PBXTargetDependency */,
+			);
+			name = CompassTests;
+			productName = CompassTests;
+			productReference = 40A2BD53214ABBD000340F9F /* CompassTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -135,6 +186,10 @@
 				TargetAttributes = {
 					405E218C212B0151009B1062 = {
 						CreatedOnToolsVersion = 9.4;
+					};
+					40A2BD52214ABBD000340F9F = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = 405E218C212B0151009B1062;
 					};
 				};
 			};
@@ -152,6 +207,7 @@
 			projectRoot = "";
 			targets = (
 				405E218C212B0151009B1062 /* Compass */,
+				40A2BD52214ABBD000340F9F /* CompassTests */,
 			);
 		};
 /* End PBXProject section */
@@ -164,6 +220,13 @@
 				405E21A9212C321B009B1062 /* pict--left-arrow-sales-arrows-vector-stencils-library.png in Resources */,
 				405E219B212B0153009B1062 /* Assets.xcassets in Resources */,
 				405E2196212B0151009B1062 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40A2BD51214ABBD000340F9F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +286,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		40A2BD4F214ABBD000340F9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40A2BD56214ABBD000340F9F /* CalculationsTest.swift in Sources */,
+				40A2BD5D214ABF4E00340F9F /* Calculations.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		40A2BD59214ABBD000340F9F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 405E218C212B0151009B1062 /* Compass */;
+			targetProxy = 40A2BD58214ABBD000340F9F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		405E2194212B0151009B1062 /* Main.storyboard */ = {
@@ -391,6 +471,46 @@
 			};
 			name = Release;
 		};
+		40A2BD5B214ABBD100340F9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7K888B9TC5;
+				INFOPLIST_FILE = CompassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.caudio.CompassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Compass.app/Compass";
+			};
+			name = Debug;
+		};
+		40A2BD5C214ABBD100340F9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7K888B9TC5;
+				INFOPLIST_FILE = CompassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.caudio.CompassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Compass.app/Compass";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -408,6 +528,15 @@
 			buildConfigurations = (
 				405E21A3212B0153009B1062 /* Debug */,
 				405E21A4212B0153009B1062 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		40A2BD5A214ABBD100340F9F /* Build configuration list for PBXNativeTarget "CompassTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40A2BD5B214ABBD100340F9F /* Debug */,
+				40A2BD5C214ABBD100340F9F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
