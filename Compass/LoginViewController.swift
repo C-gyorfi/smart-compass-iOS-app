@@ -30,7 +30,7 @@ class LoginViewController: UIViewController {
         
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
-        navigationItem.title = "No storyboard"
+        navigationItem.title = "Login Page"
         self.view.backgroundColor = UIColor.darkGray
         
         titleLabel.textColor = UIColor.red
@@ -129,7 +129,7 @@ class LoginViewController: UIViewController {
                     print(self.userData.objectID)
                     
                     self.par.updateUserLocation(classN: "Users", uData: self.userData)
-                    //self.navigationController?.pushViewController(ViewController(), animated: true)
+                    self.navigationController?.pushViewController(ViewController(), animated: true)
                 }
             }
         }

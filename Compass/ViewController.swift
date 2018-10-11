@@ -56,7 +56,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.view.backgroundColor = UIColor.darkGray
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
-        navigationItem.title = "No storyboard"
+        navigationItem.title = "Compass"
         degreeLabel.text = "Dir Degree->"
         self.view.addSubview(degreeLabel)
         self.view.addSubview(ArrowImage)
@@ -133,7 +133,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             if par.updateUserLocation(classN: "Users", uData: myUserData) {
                 print("Current object id = \(myUserData.objectID)")
             } else {
-                if let tempID = UserDefaults.standard.string(forKey: "parseObjectID") {
+                if let tempID = UserDefaults.standard.string(forKey: myUserData.name) {
                 myUserData.objectID = tempID
                     }
             }
