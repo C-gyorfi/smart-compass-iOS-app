@@ -22,7 +22,7 @@ class PServer {
         })
         
         Parse.initialize(with: parseConfig)
-        PFUser.enableAutomaticUser()
+       // PFUser.enableAutomaticUser()
         let defaultACL = PFACL()
         defaultACL.hasPublicReadAccess = true
         
@@ -39,7 +39,8 @@ class PServer {
             if error != nil { print(error ?? "Something went wrong...")
             }
             else {
-                UserDefaults.standard.set(saveObject.objectId, forKey: "parseObjectID")
+                UserDefaults.standard.set(saveObject.objectId, forKey: uData.name)
+                UserDefaults.standard.set(uData.name, forKey: "userName")
                 print("Location saved to server")
             }
         }

@@ -15,30 +15,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation? = nil
     var targetLocation: CLLocation? = nil
-    let par = PServer()
+    let par = PServer() 
     let myCalc = Calculations()
     var myUserData = UserData()
     
-    @IBOutlet weak var ArrowImage: UIImageView!
-    @IBOutlet weak var degreeLabel: UITextField!
+    let ArrowImage = UIImageView(image: UIImage(named: "240px-Green_Arrow_Up_Darker.png"))
+    let degreeLabel = UILabel(frame: CGRect.zero)
+    let setTargetLocationButton = UIButton(frame: CGRect.zero)
     
-    @IBAction func popLocationButton(_ sender: UIButton) {
-        
-        if currentLocation?.coordinate.latitude != nil && currentLocation?.coordinate.longitude != nil  {
-            targetLocation = currentLocation
-        }
-    }
     
     func initLocationManager() {
         
-        par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
+        //this function must be moved somewhere else, call once when app started
+        //par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
         
-        //This code will go to login page ViewController
-        myUserData.name = "Test Name"
-        par.saveUserLocation(classN: "Users", uData: myUserData)
         if let tempID = UserDefaults.standard.string(forKey: "parseObjectID") {
             myUserData.objectID = tempID
-        } else { myUserData.objectID = "NoID" }
+        } else { myUserData.objectID = "" }
+        if let userName = UserDefaults.standard.string(forKey: "userName") {
+            myUserData.name = userName
+        } else { myUserData.objectID = "" }
+        
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -51,6 +48,59 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initLocationManager()
+        createUI()
+    }
+    
+    func createUI(){
+        
+        navigationController?.navigationBar.barTintColor = UIColor.black
+        self.view.backgroundColor = UIColor.darkGray
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
+        navigationItem.title = "No storyboard"
+        degreeLabel.text = "Dir Degree->"
+        self.view.addSubview(degreeLabel)
+        self.view.addSubview(ArrowImage)
+        
+        setTargetLocationButton.setTitle("Set Target Location", for: .normal)
+        setTargetLocationButton.addTarget(self, action: #selector(setTargetLocationPressed), for: .touchUpInside)
+        self.view.addSubview(setTargetLocationButton)
+        
+        setTargetLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([ setTargetLocationButton.centerXAnchor.constraint(lessThanOrEqualTo:     self.view.centerXAnchor),
+                                      setTargetLocationButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 140)])
+        
+        degreeLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([ degreeLabel.centerXAnchor.constraint(lessThanOrEqualTo:self.view.centerXAnchor),
+                                      degreeLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 100)])
+        
+        let backButton = UIButton(frame: CGRect.zero)
+        backButton.setTitle("Back", for: .normal)
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        self.view.addSubview(backButton)
+        
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([ backButton.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
+                                      backButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 300)])
+        
+        ArrowImage.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([ArrowImage.widthAnchor.constraint(equalToConstant: 100),
+                                     ArrowImage.heightAnchor.constraint(equalToConstant: 100),
+                                     ArrowImage.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
+                                     ArrowImage.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
+        
+    }
+    
+    @objc func backButtonPressed() {
+        self.navigationController?.popViewController(animated: true)
+        print(UserDefaults.standard.string(forKey: "parseObjectID") as! String)
+    }
+    
+    @objc func setTargetLocationPressed(_ sender: UIButton) {
+        
+        if currentLocation?.coordinate.latitude != nil && currentLocation?.coordinate.longitude != nil  {
+            targetLocation = currentLocation
+        print("New target location")
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -76,8 +126,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             degreeLabel.text = String(dirRadiant)
         }
     }
-    
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         currentLocation = locations[0]
