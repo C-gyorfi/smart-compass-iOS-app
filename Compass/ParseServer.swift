@@ -39,35 +39,59 @@ class PServer {
             if error != nil { print(error ?? "Something went wrong...")
             }
             else {
-                UserDefaults.standard.set(saveObject.objectId, forKey: uData.name)
-                UserDefaults.standard.set(uData.name, forKey: "userName")
+                UserDefaults.standard.set(saveObject.objectId, forKey: "locationObjectId")
                 print("Location saved to server")
             }
         }
     }
     
-    func updateUserLocation(classN: String, uData: UserData) -> Bool {
-        var isUpdated = false
+    //this is could be more "reusable" possibly with key/equalto attributes, but for now I can get the object id for username
+    //It will return a Nil
+    func getObjectId(classN: String, uData: UserData) {
         let quiery = PFQuery(className: classN)
-        quiery.getObjectInBackground(withId: uData.objectID, block: { (object, error) in
-            if error != nil {
-                print(error ?? "Failed to fetch data")
-            } else {
-                if let newUserData = object {
-                    newUserData["Location"] = PFGeoPoint(location: uData.location)
-                    newUserData.saveInBackground(block: { (sucess, error) in
-                        if error != nil {
-                            print(error ?? "Failed to update data")
-                        }
-                        else {
-                            isUpdated = true
-                            print("Location updated for user: \(uData.name)")
-                        }
-                    })
-                }
+        quiery.whereKey("UserName", equalTo: uData.name)
+        
+        quiery.findObjectsInBackground { (objects, error) in
+            guard error == nil else {
+                print(error)
+                return
             }
+            guard let objects = objects else {
+                print("objects not found")
+                return
+            }
+                if let objectID = objects.first?.objectId {
+                    print("saving location object id of usern, id: \(objectID)")
+                    UserDefaults.standard.set(objectID, forKey: "locationObjectId")
+                } else {
+                    self.saveUserLocation(classN: classN, uData: uData)
+            }
+        }
+    }
+    
+// Work on this next time
+    func updateUserLocation(classN: String, uData: UserData) {
+        let quiery = PFQuery(className: classN)
+
+        quiery.getObjectInBackground(withId: uData.objectID, block: { (object, error) in
+            guard error == nil else {
+                print(error ?? "Failed to fetch data")
+                return
+            }
+                guard let newUserData = object else {
+                    print("object doesnt exist")
+                    return
+                }
+
+            newUserData["Location"] = PFGeoPoint(location: uData.location)
+            newUserData.saveInBackground(block: { (sucess, error) in
+                guard error == nil else {
+                    print(error ?? "Failed to update data")
+                    return
+                }
+
+            })
         })
-      return isUpdated
     }
 }
 
