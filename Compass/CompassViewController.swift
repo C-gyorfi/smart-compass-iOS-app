@@ -168,10 +168,9 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         guard let targetLocation = targetLocation else {
             return
         }
-        guard let distance = currentLocation?.distance(from: targetLocation) else {
-            return
+        if let distance = currentLocation?.distance(from: targetLocation) {
+            distanceLabel.text = "\(Int(distance))m"
         }
-        distanceLabel.text = "\(Int(distance))m"
     }
 
     override func didReceiveMemoryWarning() {

@@ -40,7 +40,7 @@ class PServer {
             }
             else {
                 UserDefaults.standard.set(saveObject.objectId, forKey: "locationObjectId")
-                print("Location saved to server")
+                print("New location object saved to server")
             }
         }
     }
@@ -61,7 +61,7 @@ class PServer {
                 return
             }
                 if let objectID = objects.first?.objectId {
-                    print("saving location object id of usern, id: \(objectID)")
+                    print("fetched location id for curr user, id: \(objectID)")
                     UserDefaults.standard.set(objectID, forKey: "locationObjectId")
                 } else {
                     self.saveUserLocation(classN: classN, uData: uData)
@@ -69,10 +69,31 @@ class PServer {
         }
     }
     
+    func deleteObjects(classN: String, uData: UserData) {
+        let query = PFQuery(className: classN)
+        query.whereKey("UserName", equalTo: uData.name)
+        query.findObjectsInBackground { (objects, error) in
+            if let error = error {
+                print(error)
+            } else if let object = objects?.first {
+                
+                if let obj = object as? PFObject {
+                    print("Deleting: \(obj)")
+                    obj.deleteInBackground(block: { (success, error) in
+                        if error != nil {
+                            print(error ?? "error while deleting")
+                        } else {print("Object deleted")}
+                    })
+                } else {
+                    print("failed to delete location object")
+                }
+            }
+        }
+    }
+    
 // Work on this next time
     func updateUserLocation(classN: String, uData: UserData) {
         let quiery = PFQuery(className: classN)
-
         quiery.getObjectInBackground(withId: uData.objectID, block: { (object, error) in
             guard error == nil else {
                 print(error ?? "Failed to fetch data")
@@ -93,6 +114,7 @@ class PServer {
             })
         })
     }
+    
 }
 
 class UserData {

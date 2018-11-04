@@ -13,14 +13,28 @@ class UserTableViewController: UITableViewController {
 
     let cellID = "CellID"
     var userNames = [""]
-    var curretUserName: String?
+    var userData = UserData()
+    let par = PServer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Help: custom icon positioning is not working, who to fix this?
+//        let accountIcon = UIImage(named: "accountimg.png")
+//        let accSettingsButton = UIBarButtonItem(image: accountIcon?.stretchableImage(withLeftCapWidth: 1, topCapHeight: 1), style: .plain, target: self, action: #selector(barbuttontapped))
+//        self.navigationItem.rightBarButtonItem?.backButtonBackgroundVerticalPositionAdjustment(for: UIBarMetrics(rawValue: 5)!)
 
+        let logoutButton = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logout))
+        logoutButton.tintColor = UIColor.red
+        self.navigationItem.hidesBackButton = true
+        self.navigationItem.leftBarButtonItem = logoutButton
+        
+        let accSettingsButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(barbuttontapped))
+        self.navigationItem.rightBarButtonItem  = accSettingsButton
+        
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.view.backgroundColor = UIColor.darkGray
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
         navigationItem.title = "Users"
         
         tableView.register(newCell.self, forCellReuseIdentifier: cellID)
@@ -30,7 +44,7 @@ class UserTableViewController: UITableViewController {
             self.navigationController?.popViewController(animated: true)
             return
         }
-        curretUserName = userName
+        userData.name = userName
         
         let query = PFUser.query()
         query?.findObjectsInBackground(block: { (objects, error) in
@@ -42,7 +56,7 @@ class UserTableViewController: UITableViewController {
                 for object in users {
                     
                     if let user = object as? PFUser {
-                        if user.username != self.curretUserName {
+                        if user.username != self.userData.name {
                             self.userNames.append(user.username!)}
                     }
                 }
@@ -50,21 +64,27 @@ class UserTableViewController: UITableViewController {
             self.tableView.reloadData()
         })
     }
-
+    @objc func barbuttontapped() {
+        self.navigationController?.pushViewController(AccountSettingsViewController(), animated: true)
+    }
+    
+    @objc func logout() {
+        UserDefaults.standard.removeObject(forKey: "locationObjectId")
+        UserDefaults.standard.removeObject(forKey: "userName")
+        PFUser.logOut()
+        print("logging out")
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return userNames.count
     }
 
@@ -121,49 +141,4 @@ class UserTableViewController: UITableViewController {
         }
         
     }
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

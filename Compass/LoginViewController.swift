@@ -80,6 +80,12 @@ class LoginViewController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if PFUser.current() != nil {
+            self.navigationController?.pushViewController(UserTableViewController(), animated: true)
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -162,10 +168,10 @@ class LoginViewController: UIViewController {
                 }
                 
                 if success {
-                    
                     self.userData.name = self.nameTextField.text!
                     self.userData.location = CLLocation(latitude: 51.4885993, longitude: -0.0235309)
-                    self.par.saveUserLocation(classN: "Locations", uData: self.userData)
+                    //get the object ID or save new(it shouldnt exist since its a new user)
+                    self.par.getObjectId(classN: "Locations", uData: self.userData)
                     self.SwitchPagePressed()
                 }
             }
