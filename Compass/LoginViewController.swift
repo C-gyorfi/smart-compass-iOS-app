@@ -40,11 +40,10 @@ class LoginViewController: UIViewController {
         switchPageButton.setTitle("Not registered? SignUp", for: .normal)
         switchPageButton.addTarget(self, action: #selector(SwitchPagePressed), for: .touchUpInside)
         
-        nameTextField.placeholder = "e-mail address..."
         nameTextField.text = "test@mail.co.uk"
         nameTextField.textColor = UIColor.white
         nameTextField.layer.backgroundColor = UIColor.blue.cgColor
-        nameTextField.attributedPlaceholder = NSAttributedString(string: "Name...", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        nameTextField.attributedPlaceholder = NSAttributedString(string: "e-mail address...", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         
         
         passTextField.placeholder = "password..."

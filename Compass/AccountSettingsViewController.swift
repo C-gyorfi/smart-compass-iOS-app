@@ -9,9 +9,10 @@
 import UIKit
 import Parse
 
-class AccountSettingsViewController: UIViewController {
+class AccountSettingsViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
     let deleteAccountButton = UIButton()
+    let updateUserImageButton = UIButton()
     let par = PServer()
     let userData = UserData()
     var activityIndicator = UIActivityIndicatorView()
@@ -49,6 +50,9 @@ class AccountSettingsViewController: UIViewController {
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveUserDetails))
         self.navigationItem.rightBarButtonItem  = saveButton
         
+        updateUserImageButton.setTitle("Update your avatar", for: .normal)
+        updateUserImageButton.setTitleColor(UIColor.blue, for: .normal)
+        
         deleteAccountButton.setTitle("Delete Account", for: .normal)
         deleteAccountButton.setTitleColor(UIColor.red, for: .normal)
         
@@ -71,13 +75,13 @@ class AccountSettingsViewController: UIViewController {
         topStackView.axis = .horizontal
         topStackView.spacing = 10
         
-        let stackView = UIStackView(arrangedSubviews: [topStackView, aboutLabel, userInforTextField, deleteAccountButton])
+        let stackView = UIStackView(arrangedSubviews: [updateUserImageButton, topStackView, aboutLabel, userInforTextField, deleteAccountButton])
         stackView.axis = .vertical
         stackView.spacing = 20
         
         self.view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-//        stackView.alignment = .leading
+        
         NSLayoutConstraint.activate([stackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width-25),
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
                                      stackView.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
@@ -91,10 +95,10 @@ class AccountSettingsViewController: UIViewController {
     
     private func setUpHandlers() {
         deleteAccountButton.addTarget(self, action: #selector(deleteAccount), for: .touchUpInside)
+        updateUserImageButton.addTarget(self, action: #selector(updateUserImage), for: .touchUpInside)
     }
     
     @objc private func deleteAccount() {
-        
         
         let alert = UIAlertController(title: "Account will be deleted", message: "Do you wish to continue?", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction.init(title: "Yes", style: .default, handler: { (action) in
@@ -156,6 +160,21 @@ class AccountSettingsViewController: UIViewController {
         
     }
     
+    @objc func updateUserImage() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        imagePicker.allowsEditing = false
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.avatarImage.image = image
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func createAlert(title: String, message: String) {
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
@@ -167,11 +186,46 @@ class AccountSettingsViewController: UIViewController {
     }
     
     @objc func saveUserDetails(){
-        print("save user details function not yet implemented")
+        
+        self.activityIndicator = UIActivityIndicatorView(frame: CGRect.zero)
+        self.activityIndicator.center = self.view.center
+        self.activityIndicator.hidesWhenStopped = true
+        self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        self.view.addSubview(self.activityIndicator)
+        self.activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+        
+        let user = PFUser.current()
+        let imageData = UIImagePNGRepresentation(self.avatarImage.image!)
+        let imageFile = PFFile(name: "avatar.png", data: imageData!)
+        user!["avatar"] = imageFile
+        user!.username = nameTextField.text
+        user!["userInfo"] = userInforTextField.text
+        user?.saveInBackground(block: { (success, error) in
+            
+            self.activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+            
+            guard error == nil else {
+                var displayErrorMessage = "Please try again later"
+                let error = error as NSError?
+                if let errorMessage = error?.userInfo["error"] as? String {
+                    displayErrorMessage = errorMessage
+                }
+                
+                self.createAlert(title: "Error:", message: displayErrorMessage)
+                return
+            }
+            if success {
+                self.navigationController?.popViewController(animated: true)
+            }
+        })
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        nameTextField.resignFirstResponder()
         userInforTextField.resignFirstResponder()
     }
     
