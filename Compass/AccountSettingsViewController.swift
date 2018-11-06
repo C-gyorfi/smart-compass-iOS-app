@@ -56,7 +56,6 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         deleteAccountButton.setTitle("Delete Account", for: .normal)
         deleteAccountButton.setTitleColor(UIColor.red, for: .normal)
         
-        self.avatarImage = UIImageView(image: UIImage(named: "avatar.png"))
         nameLabel.text = "Name:"
         nameLabel.textColor = UIColor.white
         nameTextField.backgroundColor = UIColor.lightGray
@@ -66,6 +65,8 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         userInforTextField.text = "Welcome to my profile..."
         aboutLabel.text = "About:"
         aboutLabel.textColor = UIColor.white
+        
+        loadCurrentUserData()
         
         let nameRowsStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField])
         nameRowsStackView.axis = .vertical
@@ -113,7 +114,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
             
             let query = PFQuery(className: "Locations")
      
-            query.whereKey("UserName", equalTo: self.userData.name)
+            query.whereKey("UserName", equalTo: PFUser.current()?.username)
                 query.findObjectsInBackground { (objects, error) in
                     if let error = error {
                         print(error)
@@ -160,6 +161,24 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         
     }
     
+    func loadCurrentUserData() {
+        self.nameTextField.text = PFUser.current()?.username
+        if let userInfo = PFUser.current()?.value(forKey: "userInfo") {
+            self.userInforTextField.text = userInfo as! String }
+        
+        if let avatarPic = PFUser.current()!.value(forKey: "avatar") as? PFFile {
+            avatarPic.getDataInBackground { (imageData, error) in
+                if error == nil {
+                    let image = UIImage(data:imageData!)
+                    self.avatarImage.image = image
+                }else{
+                    print(error ?? "error while fetching image")
+                    self.avatarImage = UIImageView(image: UIImage(named: "avatar.png"))
+                }
+            }
+        }
+    }
+    
     @objc func updateUserImage() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -187,6 +206,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
     
     @objc func saveUserDetails(){
         
+        
         self.activityIndicator = UIActivityIndicatorView(frame: CGRect.zero)
         self.activityIndicator.center = self.view.center
         self.activityIndicator.hidesWhenStopped = true
@@ -195,6 +215,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         self.activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         
+        par.deleteObjects(classN: "Locations", uData: userData)
         
         let user = PFUser.current()
         let imageData = UIImagePNGRepresentation(self.avatarImage.image!)

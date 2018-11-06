@@ -32,7 +32,7 @@ class PServer {
     
     func saveUserLocation(classN: String, uData: UserData) {
         let saveObject = PFObject(className: classN)
-        saveObject["UserName"] = uData.name
+        saveObject["UserName"] = PFUser.current()?.username
         saveObject["Location"] = PFGeoPoint(location: uData.location)
         //object ID is being returned before updated because its saving in BG
         saveObject.saveInBackground { (success, error) -> Void in
@@ -49,7 +49,7 @@ class PServer {
     //It will return a Nil
     func getObjectId(classN: String, uData: UserData) {
         let quiery = PFQuery(className: classN)
-        quiery.whereKey("UserName", equalTo: uData.name)
+        quiery.whereKey("UserName", equalTo: PFUser.current()?.username)
         
         quiery.findObjectsInBackground { (objects, error) in
             guard error == nil else {
@@ -71,7 +71,7 @@ class PServer {
     
     func deleteObjects(classN: String, uData: UserData) {
         let query = PFQuery(className: classN)
-        query.whereKey("UserName", equalTo: uData.name)
+        query.whereKey("UserName", equalTo: PFUser.current()?.username)
         query.findObjectsInBackground { (objects, error) in
             if let error = error {
                 print(error)
@@ -103,8 +103,8 @@ class PServer {
                     print("object doesnt exist")
                     return
                 }
-
             newUserData["Location"] = PFGeoPoint(location: uData.location)
+            newUserData["UserName"] = PFUser.current()?.username
             newUserData.saveInBackground(block: { (sucess, error) in
                 guard error == nil else {
                     print(error ?? "Failed to update data")
@@ -118,9 +118,8 @@ class PServer {
 }
 
 class UserData {
-    //best practice to use get/set?
-    var name = String()
-    var password = String()
+    var name = PFUser.current()?.username
+    var password = PFUser.current()?.password
     var location = CLLocation()
     var objectID = String()
 }

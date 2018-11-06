@@ -12,7 +12,8 @@ import Parse
 class UserTableViewController: UITableViewController {
 
     let cellID = "CellID"
-    var userNames = [""]
+    //user infor username + email
+    var userInfo = [""]
     var userData = UserData()
     let par = PServer()
     
@@ -51,13 +52,14 @@ class UserTableViewController: UITableViewController {
             if error != nil {
                 print(error ?? "error while fetching user names")
             } else if let users = objects {
-                self.userNames.removeAll()
+                self.userInfo.removeAll()
                 
                 for object in users {
                     
                     if let user = object as? PFUser {
-                        if user.username != self.userData.name {
-                            self.userNames.append(user.username!)}
+                         if user.username != PFUser.current()?.username {
+                            self.userInfo.append(user.username!)
+                        }
                     }
                 }
             }
@@ -85,32 +87,30 @@ class UserTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userNames.count
+        return userInfo.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        cell.textLabel?.text = userNames[indexPath.row]
+        cell.textLabel?.text = userInfo[indexPath.row]
         cell.backgroundColor = UIColor.darkGray;
         cell.textLabel?.textColor = UIColor.cyan
-
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell = tableView.cellForRow(at: indexPath)
-        
         if let userName = cell?.textLabel?.text {
         UserDefaults.standard.set(userName, forKey: "targetUserName")
-        self.navigationController?.pushViewController(CompassViewController(), animated: true)
+        self.navigationController?.pushViewController(UserProfileViewController(), animated: true)
         }
     }
     
 
     class newCell: UITableViewCell {
-        
+
         let taskLabel: UILabel = {
 
             let label = UILabel()
