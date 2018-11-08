@@ -73,7 +73,6 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
                     }
                 }
             }
-            
         }
     }
     
@@ -90,11 +89,10 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         self.view.addSubview(ArrowImage)
         
         setTargetLocationButton.setTitle("Set Target Location", for: .normal)
-        self.view.addSubview(setTargetLocationButton)
-        
-        setTargetLocationButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([ setTargetLocationButton.centerXAnchor.constraint(lessThanOrEqualTo:     self.view.centerXAnchor),
-                                      setTargetLocationButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 140)])
+        //self.view.addSubview(setTargetLocationButton)
+//        setTargetLocationButton.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([ setTargetLocationButton.centerXAnchor.constraint(lessThanOrEqualTo:     self.view.centerXAnchor),
+//                                      setTargetLocationButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 140)])
         
         degreeLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([ degreeLabel.centerXAnchor.constraint(lessThanOrEqualTo:self.view.centerXAnchor),
@@ -163,7 +161,7 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         
         currentLocation = locations[0]
         myUserData.location = locations[0]
-        par.updateUserLocation(classN: "Locations", uData: myUserData)
+        par.updateUserLocation(classN: "Locations", id: myUserData.objectID, location: myUserData.location)
         
         guard let targetLocation = targetLocation else {
             return

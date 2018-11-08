@@ -92,9 +92,9 @@ class PServer {
     }
     
 // Work on this next time
-    func updateUserLocation(classN: String, uData: UserData) {
+    func updateUserLocation(classN: String, id: String, location: CLLocation?) {
         let quiery = PFQuery(className: classN)
-        quiery.getObjectInBackground(withId: uData.objectID, block: { (object, error) in
+        quiery.getObjectInBackground(withId: id, block: { (object, error) in
             guard error == nil else {
                 print(error ?? "Failed to fetch data")
                 return
@@ -103,7 +103,7 @@ class PServer {
                     print("object doesnt exist")
                     return
                 }
-            newUserData["Location"] = PFGeoPoint(location: uData.location)
+            newUserData["Location"] = PFGeoPoint(location: location)
             newUserData["UserName"] = PFUser.current()?.username
             newUserData.saveInBackground(block: { (sucess, error) in
                 guard error == nil else {

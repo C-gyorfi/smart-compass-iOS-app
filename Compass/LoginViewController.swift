@@ -20,7 +20,7 @@ class LoginViewController: UIViewController {
     let loginButton = UIButton(frame: CGRect.zero)
     let switchPageButton = UIButton(frame: CGRect.zero)
     let par = PServer()
-    let userData = UserData()
+    public let userData = UserData()
     
     
     override func viewDidLoad() {

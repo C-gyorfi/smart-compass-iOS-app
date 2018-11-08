@@ -10,7 +10,7 @@ import UIKit
 import Parse
 
 class AccountSettingsViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-
+    
     let deleteAccountButton = UIButton()
     let updateUserImageButton = UIButton()
     let par = PServer()
@@ -44,15 +44,14 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.view.backgroundColor = UIColor.darkGray
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
         navigationItem.title = "Account Settings"
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveUserDetails))
         self.navigationItem.rightBarButtonItem  = saveButton
-        
-        updateUserImageButton.setTitle("Update your avatar", for: .normal)
+        updateUserImageButton.setTitle("select your picture", for: .normal)
         updateUserImageButton.setTitleColor(UIColor.blue, for: .normal)
-        
+     
         deleteAccountButton.setTitle("Delete Account", for: .normal)
         deleteAccountButton.setTitleColor(UIColor.red, for: .normal)
         
@@ -65,6 +64,8 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         userInforTextField.text = "Welcome to my profile..."
         aboutLabel.text = "About:"
         aboutLabel.textColor = UIColor.white
+        
+        self.avatarImage = UIImageView(image: UIImage(named: "noavatar.png"))
         
         loadCurrentUserData()
         
@@ -81,17 +82,20 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         stackView.spacing = 20
         
         self.view.addSubview(stackView)
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([stackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width-25),
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
                                      stackView.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
         
-        NSLayoutConstraint.activate([avatarImage.heightAnchor.constraint(equalToConstant: 60),
-                                     avatarImage.widthAnchor.constraint(equalToConstant: 60)])
+        NSLayoutConstraint.activate([avatarImage.heightAnchor.constraint(equalToConstant: 80),
+                                     avatarImage.widthAnchor.constraint(equalToConstant: 80)])
+
+        NSLayoutConstraint.activate([updateUserImageButton.heightAnchor.constraint(equalToConstant: 10),
+                                     updateUserImageButton.widthAnchor.constraint(equalToConstant: 10)])
         
-        NSLayoutConstraint.activate([userInforTextField.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
-                                     userInforTextField.heightAnchor.constraint(equalToConstant: 200)])
+        NSLayoutConstraint.activate([userInforTextField.heightAnchor.constraint(equalToConstant: 200)])
     }
     
     private func setUpHandlers() {
@@ -169,11 +173,10 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         if let avatarPic = PFUser.current()!.value(forKey: "avatar") as? PFFile {
             avatarPic.getDataInBackground { (imageData, error) in
                 if error == nil {
-                    let image = UIImage(data:imageData!)
-                    self.avatarImage.image = image
+                   if let image = UIImage(data:imageData!) {
+                        self.avatarImage.image = image }
                 }else{
                     print(error ?? "error while fetching image")
-                    self.avatarImage = UIImageView(image: UIImage(named: "avatar.png"))
                 }
             }
         }
@@ -189,7 +192,8 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.avatarImage.image = image
+            let compressedImage = UIImageJPEGRepresentation(image, 0.2)
+            self.avatarImage.image = UIImage(data:compressedImage!)
         }
         self.dismiss(animated: true, completion: nil)
     }
@@ -215,10 +219,8 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         self.activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         
-        par.deleteObjects(classN: "Locations", uData: userData)
-        
         let user = PFUser.current()
-        let imageData = UIImagePNGRepresentation(self.avatarImage.image!)
+        let imageData = UIImageJPEGRepresentation(self.avatarImage.image!, 0.1)
         let imageFile = PFFile(name: "avatar.png", data: imageData!)
         user!["avatar"] = imageFile
         user!.username = nameTextField.text
@@ -239,6 +241,10 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                 return
             }
             if success {
+                if let id = UserDefaults.standard.string(forKey: "locationObjectId") {
+                    self.par.updateUserLocation(classN: "Locations", id: id, location: nil)
+                }
+                print(LoginViewController().userData.objectID)
                 self.navigationController?.popViewController(animated: true)
             }
         })
