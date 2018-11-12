@@ -168,7 +168,6 @@ class LoginViewController: UIViewController {
                 
                 if success {
                     self.userData.name = self.nameTextField.text!
-                    self.userData.location = CLLocation(latitude: 51.4885993, longitude: -0.0235309)
                     //get the object ID or save new(it shouldnt exist since its a new user)
                     self.par.getObjectId(classN: "Locations", uData: self.userData)
                     self.SwitchPagePressed()

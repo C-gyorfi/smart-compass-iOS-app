@@ -210,7 +210,6 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
     
     @objc func saveUserDetails(){
         
-        
         self.activityIndicator = UIActivityIndicatorView(frame: CGRect.zero)
         self.activityIndicator.center = self.view.center
         self.activityIndicator.hidesWhenStopped = true

@@ -27,16 +27,13 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
     
     
     func initLocationManager() {
-        //Fault???
         if let userName = UserDefaults.standard.string(forKey: "userName") {
             myUserData.name = userName
-        } else { myUserData.name = ""
         }
         if let objectID = UserDefaults.standard.string(forKey: "locationObjectId") {
             myUserData.objectID = objectID
-        } else { myUserData.objectID = ""
         }
-    
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
@@ -49,31 +46,35 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         initLocationManager()
         createUI()
         setUpHandlers()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
-        print("appear")
-        let query = PFQuery(className: "Locations")
-        
+        //get location object for user
+        //problem with this: slowing down the main thread
+        //solution: keep the background operation, but instead of returning a value, save value in a public var
+        //start tracking when this public var is != nil
+        self.targetLocation = nil
         if let targerUserName = UserDefaults.standard.string(forKey: "targetUserName") {
-            
-            query.whereKey("UserName", equalTo: targerUserName)
-            query.findObjectsInBackground { (objects, error) in
-                if let error = error {
-                    print(error)
-                } else if let object = objects?.first {
-                    
-                    if let location = object["Location"] as? PFGeoPoint {
-                        self.targetLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-                        print("new target location: \(self.targetLocation)")
-                    } else {
-                        print("failed to update target")
-                    }
-                }
-            }
+           self.targetLocation = par.findUsersLocation(userName: targerUserName)
         }
+    
+//        let query = PFQuery(className: "Locations")
+//        if let targerUserName = UserDefaults.standard.string(forKey: "targetUserName") {
+//            query.whereKey("UserName", equalTo: targerUserName)
+//            query.findObjectsInBackground { (objects, error) in
+//                if let error = error {
+//                    print(error)
+//                } else if let object = objects?.first {
+//
+//                    if let location = object["Location"] as? PFGeoPoint {
+//                        self.targetLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+//                        print("new target location: \(self.targetLocation)")
+//                    } else {
+//                        print("failed to update target")
+//                    }
+//                }
+//            }
+//        }
     }
     
     private func createUI(){
@@ -88,7 +89,7 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         self.view.addSubview(distanceLabel)
         self.view.addSubview(ArrowImage)
         
-        setTargetLocationButton.setTitle("Set Target Location", for: .normal)
+        //setTargetLocationButton.setTitle("Set Target Location", for: .normal)
         //self.view.addSubview(setTargetLocationButton)
 //        setTargetLocationButton.translatesAutoresizingMaskIntoConstraints = false
 //        NSLayoutConstraint.activate([ setTargetLocationButton.centerXAnchor.constraint(lessThanOrEqualTo:     self.view.centerXAnchor),
@@ -127,10 +128,8 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc func setTargetLocationPressed(_ sender: UIButton) {
-        
         if currentLocation?.coordinate.latitude != nil && currentLocation?.coordinate.longitude != nil  {
             targetLocation = currentLocation
-        print("New target location")
         }
     }
     
@@ -140,23 +139,21 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         
         degreeLabel.text = "\(Int(newHeading.trueHeading))°"
         
-        //if target is nil, arrow will point to north
+        //if target is nil, arrow will point to true north
         if targetLocation == nil {
         UIView.animate(withDuration: 0.5) {
         self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(6.28-headingR))
-        }
-        }
-        
-        else {
-            //need to use newHeading to calculate headin in realation to point
+            }
+        } else {
+            //need to use newHeading to calculate headin in realation to target point
             let dirRadiant = self.myCalc.degreesToRadians(degrees: myCalc.getBearingBetweenTwoPoints1(point1: currentLocation!, point2: targetLocation!))
             
             UIView.animate(withDuration: 0.5) {
-                //now it should point towards the target location in case the device points towards north -> test this
                 self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(dirRadiant - headingR))
             }
         }
     }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         currentLocation = locations[0]
@@ -170,7 +167,7 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
             distanceLabel.text = "\(Int(distance))m"
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

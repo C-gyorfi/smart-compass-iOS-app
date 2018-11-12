@@ -25,9 +25,7 @@ class PServer {
        // PFUser.enableAutomaticUser()
         let defaultACL = PFACL()
         defaultACL.hasPublicReadAccess = true
-        
         PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
-        
     }
     
     func saveUserLocation(classN: String, uData: UserData) {
@@ -36,7 +34,7 @@ class PServer {
         saveObject["Location"] = PFGeoPoint(location: uData.location)
         //object ID is being returned before updated because its saving in BG
         saveObject.saveInBackground { (success, error) -> Void in
-            if error != nil { print(error ?? "Something went wrong...")
+            if error != nil { print(error ?? "error while saving user location")
             }
             else {
                 UserDefaults.standard.set(saveObject.objectId, forKey: "locationObjectId")
@@ -44,9 +42,7 @@ class PServer {
             }
         }
     }
-    
-    //this is could be more "reusable" possibly with key/equalto attributes, but for now I can get the object id for username
-    //It will return a Nil
+
     func getObjectId(classN: String, uData: UserData) {
         let quiery = PFQuery(className: classN)
         quiery.whereKey("UserName", equalTo: PFUser.current()?.username)
@@ -91,8 +87,7 @@ class PServer {
         }
     }
     
-// Work on this next time
-    func updateUserLocation(classN: String, id: String, location: CLLocation?) {
+    public func updateUserLocation(classN: String, id: String, location: CLLocation?) {
         let quiery = PFQuery(className: classN)
         quiery.getObjectInBackground(withId: id, block: { (object, error) in
             guard error == nil else {
@@ -110,16 +105,67 @@ class PServer {
                     print(error ?? "Failed to update data")
                     return
                 }
-
             })
         })
     }
     
+    func fetchUserData(userName: String) -> UserData? {
+            let result = UserData()
+            result.name = userName
+            let query = PFUser.query()
+            query?.findObjectsInBackground(block: { (objects, error) in
+                guard error == nil else {
+                    print(error ?? "error while fetching user names")
+                    return
+                }
+                guard let users = objects else {
+                    return
+                }
+                    for object in users {
+                        guard let user = object as? PFUser else {
+                        return }
+                            if user.username == userName {
+                                if let userInfo = user.value(forKey: "userInfo") as? String {
+                                    result.userInfo = userInfo}
+                                if let avatarPic = user.value(forKey: "avatar") as? PFFile {
+                                    avatarPic.getDataInBackground { (imageData, error) in
+                                        if error == nil {
+                                            let image = UIImage(data:imageData!)
+                                            result.avatar = image!
+                                        }else{
+                                            print(error ?? "error while fetching image")
+                                        }
+                                    }
+                                }
+                            }
+                    }
+            })
+        return result
+    }
+    
+    func findUsersLocation(userName: String) -> CLLocation? {
+        
+        let query = PFQuery(className: "Locations")
+            query.whereKey("UserName", equalTo: userName)
+        do {
+            let objects: [PFObject] = try query.findObjects()
+            if let object = objects.first {
+            if let location = object["Location"] as? PFGeoPoint {
+                return CLLocation(latitude: location.latitude, longitude: location.longitude)
+                }
+            }
+        } catch {
+            print("error while fetching location: \(error)")
+        }
+       return nil
+    }
 }
 
 class UserData {
     var name = PFUser.current()?.username
     var password = PFUser.current()?.password
+    var userInfo = String()
+    var avatar = UIImage()
     var location = CLLocation()
     var objectID = String()
 }
