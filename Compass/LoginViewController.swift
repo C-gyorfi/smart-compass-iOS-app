@@ -81,7 +81,8 @@ class LoginViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         if PFUser.current() != nil {
-            self.navigationController?.pushViewController(UserTableViewController(), animated: true)
+            let viewController = UserTableViewController(parseServer: par)
+            self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
     
@@ -135,7 +136,7 @@ class LoginViewController: UIViewController {
                     //the getObjectId func fetch the location object id from server or save a new location object for this user
                     self.par.getObjectId(classN: "Locations", uData: self.userData)
                     UserDefaults.standard.set(self.nameTextField.text!, forKey: "UserName")
-                    self.navigationController?.pushViewController(UserTableViewController(), animated: true)
+                    self.navigationController?.pushViewController(UserTableViewController(parseServer: self.par), animated: true)
                 }
             }
         }

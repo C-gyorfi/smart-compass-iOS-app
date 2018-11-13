@@ -15,7 +15,16 @@ class UserTableViewController: UITableViewController {
     //user infor username + email
     var userInfo = [""]
     var userData = UserData()
-    let par = PServer()
+    let par: PServer
+    
+    init(parseServer: PServer) {
+        par = parseServer
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

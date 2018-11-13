@@ -108,41 +108,82 @@ class PServer {
             })
         })
     }
-    
-    func fetchUserData(userName: String) -> UserData? {
+    // 3rd (Current) solution:
+    // Using closuer expression (block synthax) to work around the threding issue
+    func fetchUserData(userName: String, completion: @escaping (UserData?, Error?) -> Void) {
             let result = UserData()
             result.name = userName
             let query = PFUser.query()
             query?.findObjectsInBackground(block: { (objects, error) in
                 guard error == nil else {
                     print(error ?? "error while fetching user names")
+                    completion(nil, error)
                     return
                 }
                 guard let users = objects else {
+                    completion(nil, nil)
                     return
                 }
                     for object in users {
                         guard let user = object as? PFUser else {
-                        return }
-                            if user.username == userName {
-                                if let userInfo = user.value(forKey: "userInfo") as? String {
-                                    result.userInfo = userInfo}
-                                if let avatarPic = user.value(forKey: "avatar") as? PFFile {
-                                    avatarPic.getDataInBackground { (imageData, error) in
-                                        if error == nil {
-                                            let image = UIImage(data:imageData!)
-                                            result.avatar = image!
-                                        }else{
-                                            print(error ?? "error while fetching image")
-                                        }
+                            completion(nil, nil)
+                            return
+                        }
+                        if user.username == userName {
+                            if let userInfo = user.value(forKey: "userInfo") as? String {
+                                result.userInfo = userInfo}
+                            if let avatarPic = user.value(forKey: "avatar") as? PFFile {
+                                avatarPic.getDataInBackground { (imageData, error) in
+                                    if error == nil {
+                                        let image = UIImage(data:imageData!)
+                                        result.avatar = image!
+                                        completion(result, nil)
+                                    }else{
+                                        print(error ?? "error while fetching image")
                                     }
                                 }
                             }
+                        }
                     }
             })
+    }
+    
+    // 2nd (Faulty) Solution
+     func fetchUserData2(userName: String) -> UserData? {
+        let result = UserData()
+        result.name = userName
+        let query = PFUser.query()
+        query?.findObjectsInBackground(block: { (objects, error) in
+            guard error == nil else {
+                print(error ?? "error while fetching user names")
+                return
+            }
+            guard let users = objects else {
+                return
+            }
+            for object in users {
+                guard let user = object as? PFUser else {
+                    return }
+                if user.username == userName {
+                    if let userInfo = user.value(forKey: "userInfo") as? String {
+                        result.userInfo = userInfo}
+                    if let avatarPic = user.value(forKey: "avatar") as? PFFile {
+                        avatarPic.getDataInBackground { (imageData, error) in
+                            if error == nil {
+                                let image = UIImage(data:imageData!)
+                                result.avatar = image!
+                            }else{
+                                print(error ?? "error while fetching image")
+                            }
+                        }
+                    }
+                }
+            }
+        })
         return result
     }
     
+    // Solution that runs on Main thread
     func findUsersLocation(userName: String) -> CLLocation? {
         
         let query = PFQuery(className: "Locations")
