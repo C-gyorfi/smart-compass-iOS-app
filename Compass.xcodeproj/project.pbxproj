@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0EB05E34ED17862BAB4A88B9 /* Pods_Compass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */; };
 		405E2191212B0151009B1062 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405E2190212B0151009B1062 /* AppDelegate.swift */; };
-		405E2193212B0151009B1062 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405E2192212B0151009B1062 /* ViewController.swift */; };
+		405E2193212B0151009B1062 /* CompassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405E2192212B0151009B1062 /* CompassViewController.swift */; };
 		405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 405E2197212B0151009B1062 /* Compass.xcdatamodeld */; };
 		405E219B212B0153009B1062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405E219A212B0153009B1062 /* Assets.xcassets */; };
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
@@ -18,6 +18,7 @@
 		40A2BD5D214ABF4E00340F9F /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
 		40D382F2216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png in Resources */ = {isa = PBXBuildFile; fileRef = 40D382F1216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png */; };
 		40D382F4216C14A8001393D5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D382F3216C14A8001393D5 /* LoginViewController.swift */; };
+		40D382F621700D7B001393D5 /* UserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D382F521700D7B001393D5 /* UserTableViewController.swift */; };
 		40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +35,7 @@
 /* Begin PBXFileReference section */
 		405E218D212B0151009B1062 /* Compass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		405E2190212B0151009B1062 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		405E2192212B0151009B1062 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		405E2192212B0151009B1062 /* CompassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassViewController.swift; sourceTree = "<group>"; };
 		405E2198212B0151009B1062 /* Compass.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Compass.xcdatamodel; sourceTree = "<group>"; };
 		405E219A212B0153009B1062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		405E219F212B0153009B1062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,6 +46,7 @@
 		40A2BD57214ABBD000340F9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40D382F1216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "240px-Green_Arrow_Up_Darker.png"; sourceTree = "<group>"; };
 		40D382F3216C14A8001393D5 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		40D382F521700D7B001393D5 /* UserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewController.swift; sourceTree = "<group>"; };
 		40ECDF0121413EEA00B1947D /* Calculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculations.swift; sourceTree = "<group>"; };
 		5C93EAD26B3404DDD750A73B /* Pods-Compass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Compass.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Compass/Pods-Compass.debug.xcconfig"; sourceTree = "<group>"; };
 		97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Compass.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,10 +97,11 @@
 			isa = PBXGroup;
 			children = (
 				405E2190212B0151009B1062 /* AppDelegate.swift */,
-				405E2192212B0151009B1062 /* ViewController.swift */,
+				405E2192212B0151009B1062 /* CompassViewController.swift */,
 				40ECDF0121413EEA00B1947D /* Calculations.swift */,
 				40A2BD4D2149766500340F9F /* ParseServer.swift */,
 				40D382F3216C14A8001393D5 /* LoginViewController.swift */,
+				40D382F521700D7B001393D5 /* UserTableViewController.swift */,
 				405E219A212B0153009B1062 /* Assets.xcassets */,
 				40D382F1216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png */,
 				405E219F212B0153009B1062 /* Info.plist */,
@@ -278,9 +281,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				40D382F4216C14A8001393D5 /* LoginViewController.swift in Sources */,
-				405E2193212B0151009B1062 /* ViewController.swift in Sources */,
+				405E2193212B0151009B1062 /* CompassViewController.swift in Sources */,
 				405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */,
 				405E2191212B0151009B1062 /* AppDelegate.swift in Sources */,
+				40D382F621700D7B001393D5 /* UserTableViewController.swift in Sources */,
 				40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */,
 				40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */,
 			);
