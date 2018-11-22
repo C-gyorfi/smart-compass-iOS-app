@@ -28,7 +28,19 @@ class PServer {
         PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
     }
     
-    func saveUserLocation(classN: String, uData: UserData) {
+    //This feels unnecesarry for the sake of keeping all Parse related code in this class
+    func logIn(userName: String, pass: String, completition: @escaping (PFUser?, Error?) -> Void) {
+        PFUser.logInWithUsername(inBackground: userName, password: pass) { (user, error) in
+            guard error == nil else {
+                completition (nil, error)
+                return
+            }
+            completition(user, nil)
+            return
+        }
+    }
+        
+    func saveNewLocation(classN: String, uData: UserData) {
         let saveObject = PFObject(className: classN)
         saveObject["UserName"] = PFUser.current()?.username
         saveObject["Location"] = PFGeoPoint(location: uData.location)
@@ -60,32 +72,26 @@ class PServer {
                     print("fetched location id for curr user, id: \(objectID)")
                     UserDefaults.standard.set(objectID, forKey: "locationObjectId")
                 } else {
-                    self.saveUserLocation(classN: classN, uData: uData)
+                    self.saveNewLocation(classN: classN, uData: uData)
             }
         }
     }
     
-    func deleteObjects(classN: String, uData: UserData) {
-        let query = PFQuery(className: classN)
-        query.whereKey("UserName", equalTo: PFUser.current()?.username)
-        query.findObjectsInBackground { (objects, error) in
-            if let error = error {
-                print(error)
-            } else if let object = objects?.first {
-                
-                if let obj = object as? PFObject {
-                    print("Deleting: \(obj)")
-                    obj.deleteInBackground(block: { (success, error) in
-                        if error != nil {
-                            print(error ?? "error while deleting")
-                        } else {print("Object deleted")}
-                    })
-                } else {
-                    print("failed to delete location object")
-                }
-            }
-        }
-    }
+//    func deleteObjects(classN: String) {
+//        let query = PFQuery(className: classN)
+//        query.whereKey("UserName", equalTo: PFUser.current()?.username)
+//        query.findObjectsInBackground { (objects, error) in
+//            if let error = error {
+//                print(error)
+//            } else if let object = objects?.first {
+//                    object.deleteInBackground(block: { (success, error) in
+//                        if error != nil {
+//                            print(error ?? "error while deleting")
+//                        } else {print("Object deleted")}
+//                    })
+//            }
+//        }
+//    }
     
     public func updateUserLocation(classN: String, id: String, location: CLLocation?) {
         let quiery = PFQuery(className: classN)
@@ -108,8 +114,29 @@ class PServer {
             })
         })
     }
-    // 3rd (Current) solution:
-    // Using closuer expression (block synthax) to work around the threding issue
+    
+    func fetchUserList(completition: @escaping ([String]?, Error?) -> Void) {
+        let query = PFUser.query()
+        query?.findObjectsInBackground(block: { (objects, error) in
+            var result = [String]()
+            guard error == nil else {
+                completition(nil, error)
+                return
+            }
+            if let users = objects {
+                for object in users {
+                    if let user = object as? PFUser {
+                        if user.username != PFUser.current()?.username {
+                            result.append(user.username!)
+                        }
+                    }
+                }
+                completition(result, nil)
+            }
+        })
+    }
+    
+    // Using closure expression (block synthax) to work around the threding issue
     func fetchUserData(userName: String, completion: @escaping (UserData?, Error?) -> Void) {
             let result = UserData()
             result.name = userName
@@ -146,41 +173,6 @@ class PServer {
                         }
                     }
             })
-    }
-    
-    // 2nd (Faulty) Solution
-     func fetchUserData2(userName: String) -> UserData? {
-        let result = UserData()
-        result.name = userName
-        let query = PFUser.query()
-        query?.findObjectsInBackground(block: { (objects, error) in
-            guard error == nil else {
-                print(error ?? "error while fetching user names")
-                return
-            }
-            guard let users = objects else {
-                return
-            }
-            for object in users {
-                guard let user = object as? PFUser else {
-                    return }
-                if user.username == userName {
-                    if let userInfo = user.value(forKey: "userInfo") as? String {
-                        result.userInfo = userInfo}
-                    if let avatarPic = user.value(forKey: "avatar") as? PFFile {
-                        avatarPic.getDataInBackground { (imageData, error) in
-                            if error == nil {
-                                let image = UIImage(data:imageData!)
-                                result.avatar = image!
-                            }else{
-                                print(error ?? "error while fetching image")
-                            }
-                        }
-                    }
-                }
-            }
-        })
-        return result
     }
     
     // Solution that runs on Main thread

@@ -61,7 +61,6 @@ class UserProfileViewController: UIViewController {
         userImage.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
     }
     
-    // Ends Here:
     private func fetchUserData() {
         
         if let userName = UserDefaults.standard.string(forKey: "targetUserName") {
@@ -78,41 +77,6 @@ class UserProfileViewController: UIViewController {
                      self.userImage.image = uData.avatar
                 }
             }
-        }
-    }
-    // !!! Code to walk through
-    // Start Here: Some Code that needs Refactoring -> Go to ParseServer class to see refactoring
-    private func fetchUserDataBadPractice() {
-        if let userName = UserDefaults.standard.string(forKey:"targetUserName") {
-            navigationItem.title = userName
-            findUserButton.setTitle("Find " + userName + "'s location", for: .normal)
-            
-            let query = PFUser.query()
-            query?.findObjectsInBackground(block: { (objects, error) in
-                if error != nil {
-                    print(error ?? "error while fetching user names")
-                } else if let users = objects {
-                    for object in users {
-                        if let user = object as? PFUser {
-                            if user.username == userName {
-                                if let userInfo = user.value(forKey: "userInfo") as? String {
-                                    self.userInforTextField.text = userInfo}
-                                if let avatarPic = user.value(forKey: "avatar") as? PFFile {
-                                    avatarPic.getDataInBackground { (imageData, error) in
-                                        if error == nil {
-                                            let image = UIImage(data:imageData!)
-                                            self.userImage.image = image
-                                        } else{
-                                            print(error ?? "error while fetching image")
-                                            self.userImage.image = UIImage(named: "noavatar.png")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            })
         }
     }
     

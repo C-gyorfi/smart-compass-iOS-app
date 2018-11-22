@@ -49,32 +49,11 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        //get location object for user
-        //problem with this: slowing down the main thread
-        //solution: keep the background operation, but instead of returning a value, save value in a public var
-        //start tracking when this public var is != nil
         self.targetLocation = nil
-        if let targerUserName = UserDefaults.standard.string(forKey: "targetUserName") {
-           self.targetLocation = par.findUsersLocation(userName: targerUserName)
+        guard let targerUserName = UserDefaults.standard.string(forKey: "targetUserName") else {
+            return
         }
-    
-//        let query = PFQuery(className: "Locations")
-//        if let targerUserName = UserDefaults.standard.string(forKey: "targetUserName") {
-//            query.whereKey("UserName", equalTo: targerUserName)
-//            query.findObjectsInBackground { (objects, error) in
-//                if let error = error {
-//                    print(error)
-//                } else if let object = objects?.first {
-//
-//                    if let location = object["Location"] as? PFGeoPoint {
-//                        self.targetLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-//                        print("new target location: \(self.targetLocation)")
-//                    } else {
-//                        print("failed to update target")
-//                    }
-//                }
-//            }
-//        }
+        self.targetLocation = par.findUsersLocation(userName: targerUserName)
     }
     
     private func createUI(){
@@ -146,7 +125,7 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
             }
         } else {
             //need to use newHeading to calculate headin in realation to target point
-            let dirRadiant = self.myCalc.degreesToRadians(degrees: myCalc.getBearingBetweenTwoPoints1(point1: currentLocation!, point2: targetLocation!))
+            let dirRadiant = Calculations.degreesToRadians(degrees: Calculations.getBearingBetweenTwoPoints1(point1: currentLocation!, point2: targetLocation!))
             
             UIView.animate(withDuration: 0.5) {
                 self.ArrowImage.transform = CGAffineTransform(rotationAngle: CGFloat(dirRadiant - headingR))
@@ -160,12 +139,11 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         myUserData.location = locations[0]
         par.updateUserLocation(classN: "Locations", id: myUserData.objectID, location: myUserData.location)
         
-        guard let targetLocation = targetLocation else {
+        guard let targetLocation = targetLocation,
+              let distance = currentLocation?.distance(from: targetLocation) else {
             return
         }
-        if let distance = currentLocation?.distance(from: targetLocation) {
-            distanceLabel.text = "\(Int(distance))m"
-        }
+        distanceLabel.text = "\(Int(distance))m"
     }
     
     override func didReceiveMemoryWarning() {

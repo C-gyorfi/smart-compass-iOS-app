@@ -49,9 +49,10 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveUserDetails))
         self.navigationItem.rightBarButtonItem  = saveButton
-        updateUserImageButton.setTitle("select your picture", for: .normal)
-        updateUserImageButton.setTitleColor(UIColor.blue, for: .normal)
-     
+        //updateUserImageButton.setTitle("select your picture", for: .normal)
+        //updateUserImageButton.setTitleColor(UIColor.blue, for: .normal)
+        updateUserImageButton.setImage(UIImage(named: "updImage.png"), for: .normal)
+        
         deleteAccountButton.setTitle("Delete Account", for: .normal)
         deleteAccountButton.setTitleColor(UIColor.red, for: .normal)
         
@@ -66,6 +67,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         aboutLabel.textColor = UIColor.white
         
         self.avatarImage = UIImageView(image: UIImage(named: "noavatar.png"))
+        self.avatarImage.addSubview(updateUserImageButton)
         
         loadCurrentUserData()
         
@@ -77,13 +79,14 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         topStackView.axis = .horizontal
         topStackView.spacing = 10
         
-        let stackView = UIStackView(arrangedSubviews: [updateUserImageButton, topStackView, aboutLabel, userInforTextField, deleteAccountButton])
+        let stackView = UIStackView(arrangedSubviews: [topStackView, aboutLabel, userInforTextField, deleteAccountButton])
         stackView.axis = .vertical
         stackView.spacing = 20
         
         self.view.addSubview(stackView)
         avatarImage.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        updateUserImageButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([stackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width-25),
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
@@ -235,7 +238,6 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                 if let errorMessage = error?.userInfo["error"] as? String {
                     displayErrorMessage = errorMessage
                 }
-                
                 self.createAlert(title: "Error:", message: displayErrorMessage)
                 return
             }
@@ -243,11 +245,9 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                 if let id = UserDefaults.standard.string(forKey: "locationObjectId") {
                     self.par.updateUserLocation(classN: "Locations", id: id, location: nil)
                 }
-                print(LoginViewController().userData.objectID)
                 self.navigationController?.popViewController(animated: true)
             }
         })
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

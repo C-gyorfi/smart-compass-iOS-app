@@ -13,7 +13,7 @@ class UserTableViewController: UITableViewController {
 
     let cellID = "CellID"
     //user infor username + email
-    var userInfo = [""]
+    var userList = [""]
     var userData = UserData()
     let par: PServer
     
@@ -29,23 +29,29 @@ class UserTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.barTintColor = UIColor.black
+        self.view.backgroundColor = UIColor.darkGray
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
+        navigationItem.title = "Users"
+        
         //Help: custom icon positioning is not working, who to fix this?
-//        let accountIcon = UIImage(named: "accountimg.png")
-//        let accSettingsButton = UIBarButtonItem(image: accountIcon?.stretchableImage(withLeftCapWidth: 1, topCapHeight: 1), style: .plain, target: self, action: #selector(barbuttontapped))
-//        self.navigationItem.rightBarButtonItem?.backButtonBackgroundVerticalPositionAdjustment(for: UIBarMetrics(rawValue: 5)!)
+        var accountIcon = UIImage(named: "noavatar.png")
+        accountIcon = UIImage(cgImage: (accountIcon?.cgImage!)!, scale: 0.1, orientation: .up)
+
+        //To create a custom bar button item from a png image with template color
+        let accSettingsButton = UIButton()
+        accSettingsButton.addTarget(self, action: #selector(barbuttontapped), for: .touchUpInside)
+        accSettingsButton.setImage(UIImage(named: "accountimg.png")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        //accSettingsButton.tintColor = UIColor.blue
+        accSettingsButton.widthAnchor.constraint(equalToConstant: 36.0).isActive = true
+        accSettingsButton.heightAnchor.constraint(equalToConstant: 36.0).isActive = true
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: accSettingsButton)
+        
 
         let logoutButton = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logout))
         logoutButton.tintColor = UIColor.red
         self.navigationItem.hidesBackButton = true
         self.navigationItem.leftBarButtonItem = logoutButton
-        
-        let accSettingsButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(barbuttontapped))
-        self.navigationItem.rightBarButtonItem  = accSettingsButton
-        
-        navigationController?.navigationBar.barTintColor = UIColor.black
-        self.view.backgroundColor = UIColor.darkGray
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
-        navigationItem.title = "Users"
         
         tableView.register(newCell.self, forCellReuseIdentifier: cellID)
         
@@ -56,24 +62,15 @@ class UserTableViewController: UITableViewController {
         }
         userData.name = userName
         
-        let query = PFUser.query()
-        query?.findObjectsInBackground(block: { (objects, error) in
-            if error != nil {
-                print(error ?? "error while fetching user names")
-            } else if let users = objects {
-                self.userInfo.removeAll()
-                
-                for object in users {
-                    
-                    if let user = object as? PFUser {
-                         if user.username != PFUser.current()?.username {
-                            self.userInfo.append(user.username!)
-                        }
-                    }
-                }
+        par.fetchUserList { (list, error) in
+            guard error == nil else {
+                print (error ?? "error while fetching user names")
+                return
             }
-            self.tableView.reloadData()
-        })
+            if let listOfUsers = list {
+            self.userList = listOfUsers
+            self.tableView.reloadData() }
+        }
     }
     @objc func barbuttontapped() {
         self.navigationController?.pushViewController(AccountSettingsViewController(), animated: true)
@@ -96,13 +93,13 @@ class UserTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userInfo.count
+        return userList.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        cell.textLabel?.text = userInfo[indexPath.row]
+        cell.textLabel?.text = userList[indexPath.row]
         cell.backgroundColor = UIColor.darkGray;
         cell.textLabel?.textColor = UIColor.cyan
         return cell
@@ -116,7 +113,6 @@ class UserTableViewController: UITableViewController {
         self.navigationController?.pushViewController(UserProfileViewController(), animated: true)
         }
     }
-    
 
     class newCell: UITableViewCell {
 

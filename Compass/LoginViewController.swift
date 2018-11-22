@@ -28,9 +28,12 @@ class LoginViewController: UIViewController {
         
         par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
         
+        createUI()
+    }
+    
+    private func createUI() {
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
-        navigationItem.title = "Login Page"
         self.view.backgroundColor = UIColor.darkGray
         
         titleLabel.textColor = UIColor.red
@@ -74,9 +77,6 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([stackView.widthAnchor.constraint(equalToConstant: 200),
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
                                      stackView.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
-        
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -114,34 +114,31 @@ class LoginViewController: UIViewController {
             
             //clear previous login data
             UserDefaults.standard.removeObject(forKey: "locationObjectId")
-            
             PFUser.logInWithUsername(inBackground: nameTextField.text!, password: passTextField.text!) { (user, error) in
                 self.activityIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
-            
+
                 if error != nil {
-                    
+
                     var displayErrorMessage = "Please try again later"
                     let error = error as NSError?
                     if let errorMessage = error?.userInfo["error"] as? String {
-                        
+
                         displayErrorMessage = errorMessage
-                        
+
                     }
                     self.createAlert(title: "Error:", message: displayErrorMessage)
                 } else {
                     self.userData.name = self.nameTextField.text!
                     self.userData.location = CLLocation(latitude: 0, longitude: 0)
-                    
+
                     //the getObjectId func fetch the location object id from server or save a new location object for this user
                     self.par.getObjectId(classN: "Locations", uData: self.userData)
                     UserDefaults.standard.set(self.nameTextField.text!, forKey: "UserName")
                     self.navigationController?.pushViewController(UserTableViewController(parseServer: self.par), animated: true)
                 }
             }
-        }
-        else {
-
+        } else {
             //This code is a temp solution to create a new user on server
             let user = PFUser()
             user.username = nameTextField.text
