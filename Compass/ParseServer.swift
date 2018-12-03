@@ -11,6 +11,12 @@ import Parse
 
 class PServer {
     
+    enum MyError: Error {
+        case objectNotFound
+        case signUpError
+        case savingError
+    }
+    
     func initParse(appID: String, clKey: String, serverAddress: String) {
 
         Parse.enableLocalDatastore()
@@ -28,18 +34,74 @@ class PServer {
         PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
     }
     
-    //This feels unnecesarry for the sake of keeping all Parse related code in this class
     func logIn(userName: String, pass: String, completition: @escaping (PFUser?, Error?) -> Void) {
         PFUser.logInWithUsername(inBackground: userName, password: pass) { (user, error) in
             guard error == nil else {
                 completition (nil, error)
                 return
             }
+            if user != nil {
             completition(user, nil)
             return
+            }
         }
     }
-        
+    
+    func SignUp(userName: String, pass: String, completition: @escaping (Bool, Error?) -> Void) {
+        let user = PFUser()
+        user.username = userName
+        user.email = userName
+        user.password = pass
+        user.signUpInBackground { (success, error) in
+            guard error == nil else {
+                completition(false, error)
+                return
+            }
+            if success {
+                completition(true, nil)
+                return
+            }
+            completition(false, MyError.signUpError)
+        }
+    }
+    
+    func deleteUser(completition: @escaping (Bool, Error?) -> Void) {
+        let query = PFQuery(className: "Locations")
+        query.whereKey("UserName", equalTo: PFUser.current()?.username)
+        query.findObjectsInBackground { (objects, error) in
+            guard error == nil else {
+                completition(false, error)
+                return
+            }
+            
+            guard let object = objects?.first else {
+                completition(false, MyError.objectNotFound)
+                return
+            }
+            
+            object.deleteInBackground(block: { (success, error) in
+                guard error == nil else {
+                    completition(false, error)
+                    return
+                }
+                
+                PFUser.current()?.deleteInBackground(block: { (success, error) in
+                    guard error == nil else {
+                        completition(false, error)
+                        return
+                    }
+                    if success {
+                        PFUser.logOut()
+                        UserDefaults.standard.removeObject(forKey: "locationObjectId")
+                        UserDefaults.standard.removeObject(forKey: "userName")
+                        completition(true, nil)
+                        return
+                    }
+                })
+            })
+        }
+    }
+    
     func saveNewLocation(classN: String, uData: UserData) {
         let saveObject = PFObject(className: classN)
         saveObject["UserName"] = PFUser.current()?.username
@@ -61,7 +123,6 @@ class PServer {
         
         quiery.findObjectsInBackground { (objects, error) in
             guard error == nil else {
-                print(error)
                 return
             }
             guard let objects = objects else {
@@ -76,22 +137,6 @@ class PServer {
             }
         }
     }
-    
-//    func deleteObjects(classN: String) {
-//        let query = PFQuery(className: classN)
-//        query.whereKey("UserName", equalTo: PFUser.current()?.username)
-//        query.findObjectsInBackground { (objects, error) in
-//            if let error = error {
-//                print(error)
-//            } else if let object = objects?.first {
-//                    object.deleteInBackground(block: { (success, error) in
-//                        if error != nil {
-//                            print(error ?? "error while deleting")
-//                        } else {print("Object deleted")}
-//                    })
-//            }
-//        }
-//    }
     
     public func updateUserLocation(classN: String, id: String, location: CLLocation?) {
         let quiery = PFQuery(className: classN)
@@ -136,7 +181,6 @@ class PServer {
         })
     }
     
-    // Using closure expression (block synthax) to work around the threding issue
     func fetchUserData(userName: String, completion: @escaping (UserData?, Error?) -> Void) {
             let result = UserData()
             result.name = userName
@@ -175,7 +219,29 @@ class PServer {
             })
     }
     
-    // Solution that runs on Main thread
+    func saveUserData(userData: UserData, completion: @escaping (Bool, Error?) -> Void){
+        let user = PFUser.current()
+        let imageData = UIImageJPEGRepresentation(userData.avatar, 0.1)
+        let imageFile = PFFile(name: "avatar.png", data: imageData!)
+        user!["avatar"] = imageFile
+        user!.username = userData.name
+        user!["userInfo"] = userData.userInfo
+        user?.saveInBackground(block: { (success, error) in
+            guard error == nil else {
+                completion(false, error)
+                return
+            }
+            if success {
+                if let id = UserDefaults.standard.string(forKey: "locationObjectId") {
+                    self.updateUserLocation(classN: "Locations", id: id, location: nil)
+                }
+                completion(true, nil)
+                return
+            }
+            completion(false, MyError.savingError)
+        })
+    }
+    
     func findUsersLocation(userName: String) -> CLLocation? {
         
         let query = PFQuery(className: "Locations")

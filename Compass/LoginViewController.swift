@@ -114,60 +114,44 @@ class LoginViewController: UIViewController {
             
             //clear previous login data
             UserDefaults.standard.removeObject(forKey: "locationObjectId")
-            PFUser.logInWithUsername(inBackground: nameTextField.text!, password: passTextField.text!) { (user, error) in
+            par.logIn(userName: nameTextField.text!, pass: passTextField.text!) { (user, error) in
                 self.activityIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
-
                 if error != nil {
-
+                    
                     var displayErrorMessage = "Please try again later"
                     let error = error as NSError?
                     if let errorMessage = error?.userInfo["error"] as? String {
-
+                        
                         displayErrorMessage = errorMessage
-
+                        
                     }
                     self.createAlert(title: "Error:", message: displayErrorMessage)
                 } else {
                     self.userData.name = self.nameTextField.text!
-                    self.userData.location = CLLocation(latitude: 0, longitude: 0)
-
                     //the getObjectId func fetch the location object id from server or save a new location object for this user
                     self.par.getObjectId(classN: "Locations", uData: self.userData)
                     UserDefaults.standard.set(self.nameTextField.text!, forKey: "UserName")
                     self.navigationController?.pushViewController(UserTableViewController(parseServer: self.par), animated: true)
                 }
             }
-        } else {
-            //This code is a temp solution to create a new user on server
-            let user = PFUser()
-            user.username = nameTextField.text
-            user.email = nameTextField.text
-            user.password = passTextField.text
             
-            user.signUpInBackground { (success, error) in
+        } else {
+            par.SignUp(userName: nameTextField.text!, pass: passTextField.text!) { (success, error) in
                 self.activityIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
-                
                 guard error == nil else {
-                    
                     var displayErrorMessage = "Please try again later"
                     
                     let error = error as NSError?
                     
                     if let errorMessage = error?.userInfo["error"] as? String {
-                        
                         displayErrorMessage = errorMessage
-                        
                     }
                     self.createAlert(title: "Error:", message: displayErrorMessage)
                     return
                 }
-                
                 if success {
-                    self.userData.name = self.nameTextField.text!
-                    //get the object ID or save new(it shouldnt exist since its a new user)
-                    self.par.getObjectId(classN: "Locations", uData: self.userData)
                     self.SwitchPagePressed()
                 }
             }

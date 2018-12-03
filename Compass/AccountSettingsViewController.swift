@@ -49,8 +49,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         
         let saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveUserDetails))
         self.navigationItem.rightBarButtonItem  = saveButton
-        //updateUserImageButton.setTitle("select your picture", for: .normal)
-        //updateUserImageButton.setTitleColor(UIColor.blue, for: .normal)
+
         updateUserImageButton.setImage(UIImage(named: "updImage.png"), for: .normal)
         
         deleteAccountButton.setTitle("Delete Account", for: .normal)
@@ -59,15 +58,16 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         nameLabel.text = "Name:"
         nameLabel.textColor = UIColor.white
         nameTextField.backgroundColor = UIColor.lightGray
-        nameTextField.placeholder = "choose a nickname..."
+        nameTextField.text = PFUser.current()?.username
         
         userInforTextField.backgroundColor = UIColor.lightGray
-        userInforTextField.text = "Welcome to my profile..."
         aboutLabel.text = "About:"
         aboutLabel.textColor = UIColor.white
         
         self.avatarImage = UIImageView(image: UIImage(named: "noavatar.png"))
-        self.avatarImage.addSubview(updateUserImageButton)
+        let userimageView = UIView()
+        userimageView.addSubview(avatarImage)
+        userimageView.addSubview(updateUserImageButton)
         
         loadCurrentUserData()
         
@@ -75,7 +75,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         nameRowsStackView.axis = .vertical
         nameRowsStackView.spacing = 10
         
-        let topStackView = UIStackView(arrangedSubviews: [avatarImage, nameRowsStackView])
+        let topStackView = UIStackView(arrangedSubviews: [userimageView, nameRowsStackView])
         topStackView.axis = .horizontal
         topStackView.spacing = 10
         
@@ -92,11 +92,18 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
                                      stackView.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
         
+        NSLayoutConstraint.activate([userimageView.heightAnchor.constraint(equalToConstant: 80),
+                                     userimageView.widthAnchor.constraint(equalToConstant: 80)])
+        
         NSLayoutConstraint.activate([avatarImage.heightAnchor.constraint(equalToConstant: 80),
-                                     avatarImage.widthAnchor.constraint(equalToConstant: 80)])
+                                     avatarImage.widthAnchor.constraint(equalToConstant: 80),
+                                    avatarImage.leftAnchor.constraint(equalTo: userimageView.leftAnchor),
+                                    avatarImage.bottomAnchor.constraint(equalTo: userimageView.bottomAnchor)])
 
-        NSLayoutConstraint.activate([updateUserImageButton.heightAnchor.constraint(equalToConstant: 10),
-                                     updateUserImageButton.widthAnchor.constraint(equalToConstant: 10)])
+        NSLayoutConstraint.activate([updateUserImageButton.heightAnchor.constraint(equalToConstant: 20),
+                                     updateUserImageButton.widthAnchor.constraint(equalToConstant: 20),
+                                     updateUserImageButton.rightAnchor.constraint(equalTo: userimageView.rightAnchor),
+                                     updateUserImageButton.bottomAnchor.constraint(equalTo: userimageView.bottomAnchor)])
         
         NSLayoutConstraint.activate([userInforTextField.heightAnchor.constraint(equalToConstant: 200)])
     }
@@ -119,68 +126,50 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
             self.activityIndicator.startAnimating()
             UIApplication.shared.beginIgnoringInteractionEvents()
             
-            let query = PFQuery(className: "Locations")
-     
-            query.whereKey("UserName", equalTo: PFUser.current()?.username)
-                query.findObjectsInBackground { (objects, error) in
-                    if let error = error {
-                        print(error)
-                    } else if let object = objects?.first {
+            self.par.deleteUser(completition: { (success, error) in
+                guard error == nil else {
+                    var displayErrorMessage = "Error while deleting account, please try again"
+                    let error = error as NSError?
+                    if let errorMessage = error?.userInfo["error"] as? String {
+                        displayErrorMessage = errorMessage
                         
-                        if let obj = object as? PFObject {
-                            print("Deleting: \(obj)")
-                            obj.deleteInBackground(block: { (success, error) in
-                                if error != nil {
-                                    print(error ?? "error while deleting")
-                                } else {
-                                    PFUser.current()?.deleteInBackground(block: { (success, error) in
-                                        guard error == nil else {
-                                            var displayErrorMessage = "Error while deleting account, please try again"
-                                            let error = error as NSError?
-                                            if let errorMessage = error?.userInfo["error"] as? String {
-                                                displayErrorMessage = errorMessage
-                                            }
-                                            self.createAlert(title: "Error:", message: displayErrorMessage)
-                                            return
-                                        }
-                                        if success {
-                                            PFUser.logOut()
-                                            UserDefaults.standard.removeObject(forKey: "locationObjectId")
-                                            UserDefaults.standard.removeObject(forKey: "userName")
-                                            self.activityIndicator.stopAnimating()
-                                            UIApplication.shared.endIgnoringInteractionEvents()
-                                            self.navigationController?.popToRootViewController(animated: true)
-                                        }
-                                    })
-                                    print("Object deleted")}
-                            })
-                        }
                     }
+                    self.createAlert(title: "Error:", message: displayErrorMessage)
+                    return
                 }
-            self.dismiss(animated: true, completion: nil)
+                
+                if success {
+                self.activityIndicator.stopAnimating()
+                UIApplication.shared.endIgnoringInteractionEvents()
+                self.navigationController?.popToRootViewController(animated: true)
+                }
+            })
+    
         }))
         
         alert.addAction(UIAlertAction.init(title: "No", style: .default, handler: { (action) in
             self.dismiss(animated: true, completion: nil)
         }))
-        
-        self.present(alert, animated: true, completion: nil)
-        
+    
+    self.present(alert, animated: true, completion: nil)
+    
     }
     
     func loadCurrentUserData() {
-        self.nameTextField.text = PFUser.current()?.username
-        if let userInfo = PFUser.current()?.value(forKey: "userInfo") {
-            self.userInforTextField.text = userInfo as! String }
-        
-        if let avatarPic = PFUser.current()!.value(forKey: "avatar") as? PFFile {
-            avatarPic.getDataInBackground { (imageData, error) in
-                if error == nil {
-                   if let image = UIImage(data:imageData!) {
-                        self.avatarImage.image = image }
-                }else{
-                    print(error ?? "error while fetching image")
+        par.fetchUserData(userName: (PFUser.current()?.username)!) { (userData, error) in
+            guard error == nil else {
+                var defaultErrorMessage = "Error while fetching data"
+                let error = error as NSError?
+                if let errorMessage = error?.userInfo["error"] as? String {
+                    defaultErrorMessage = errorMessage
                 }
+                self.createAlert(title: "Error:", message: defaultErrorMessage)
+                return
+            }
+            if let uData = userData {
+                self.nameTextField.text = uData.name
+                self.userInforTextField.text = uData.userInfo
+                self.avatarImage.image = uData.avatar
             }
         }
     }
@@ -212,7 +201,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
     }
     
     @objc func saveUserDetails(){
-        
+
         self.activityIndicator = UIActivityIndicatorView(frame: CGRect.zero)
         self.activityIndicator.center = self.view.center
         self.activityIndicator.hidesWhenStopped = true
@@ -221,14 +210,11 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         self.activityIndicator.startAnimating()
         UIApplication.shared.beginIgnoringInteractionEvents()
         
-        let user = PFUser.current()
-        let imageData = UIImageJPEGRepresentation(self.avatarImage.image!, 0.1)
-        let imageFile = PFFile(name: "avatar.png", data: imageData!)
-        user!["avatar"] = imageFile
-        user!.username = nameTextField.text
-        user!["userInfo"] = userInforTextField.text
-        user?.saveInBackground(block: { (success, error) in
-            
+        userData.name = self.nameTextField.text
+        userData.userInfo = self.userInforTextField.text
+        userData.avatar = self.avatarImage.image!
+        
+        par.saveUserData(userData: userData) { (success, error) in
             self.activityIndicator.stopAnimating()
             UIApplication.shared.endIgnoringInteractionEvents()
             
@@ -241,13 +227,15 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                 self.createAlert(title: "Error:", message: displayErrorMessage)
                 return
             }
+            
             if success {
+                //user Location saved as a seperate object, this also need to be updated when username changed
                 if let id = UserDefaults.standard.string(forKey: "locationObjectId") {
                     self.par.updateUserLocation(classN: "Locations", id: id, location: nil)
                 }
                 self.navigationController?.popViewController(animated: true)
             }
-        })
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

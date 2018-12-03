@@ -11,8 +11,6 @@ import Parse
 
 class UserTableViewController: UITableViewController {
 
-    let cellID = "CellID"
-    //user infor username + email
     var userList = [""]
     var userData = UserData()
     let par: PServer
@@ -53,7 +51,7 @@ class UserTableViewController: UITableViewController {
         self.navigationItem.hidesBackButton = true
         self.navigationItem.leftBarButtonItem = logoutButton
         
-        tableView.register(newCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellID")
         
         guard let userName = UserDefaults.standard.string(forKey: "UserName") else {
             print("ERROR current user doesnt exist")
@@ -98,7 +96,7 @@ class UserTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath)
         cell.textLabel?.text = userList[indexPath.row]
         cell.backgroundColor = UIColor.darkGray;
         cell.textLabel?.textColor = UIColor.cyan
@@ -112,38 +110,5 @@ class UserTableViewController: UITableViewController {
         UserDefaults.standard.set(userName, forKey: "targetUserName")
         self.navigationController?.pushViewController(UserProfileViewController(), animated: true)
         }
-    }
-
-    class newCell: UITableViewCell {
-
-        let taskLabel: UILabel = {
-
-            let label = UILabel()
-           // label.text = "Test Name"
-            label.textColor = UIColor.cyan
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.backgroundColor = UIColor.darkGray
-            return label
-
-        }()
-        
-        override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
-           // setupViews()
-        }
-        
-        func setupViews() {
-
-            addSubview(taskLabel)
-
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-100 -[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0" : taskLabel] ))
-
-            addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]", options: NSLayoutFormatOptions(), metrics: nil, views: ["v0" : taskLabel] ))
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-        
     }
 }
