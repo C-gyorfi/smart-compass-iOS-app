@@ -268,3 +268,16 @@ class UserData {
     var location = CLLocation()
     var objectID = String()
 }
+
+struct ServerCredentials: Decodable {
+    let appID: String
+    let clKey: String
+    let serverAddress: String
+    
+    //initialiser could be reduced since its a Decodable object
+    init(json: [String: Any]) {
+        appID = json["appID"] as? String ?? ""
+        clKey = json["clKey"] as? String ?? ""
+        serverAddress = json["serverAddress"] as? String ?? ""
+    }
+}
