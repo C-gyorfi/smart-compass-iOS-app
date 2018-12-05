@@ -26,7 +26,25 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
+        //get server credentials from JSON file
+        do {
+            guard let path = Bundle.main.path(forResource: "server", ofType: "json") else {return}
+            let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+            
+            do {
+                guard let jsonSerialized = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: Any] else {return}
+                
+                let credentials = ServerCredentials(json: jsonSerialized)
+                //could be even more simple using JSONDecoder:
+                //let credentials = try JSONDecoder().decode(ServerCredentials.self, from: jsonData)
+                par.initParse(appID: credentials.appID, clKey: credentials.clKey, serverAddress: credentials.serverAddress)
+                
+            } catch let error{
+                print(error.localizedDescription)
+            }
+        } catch let error {
+            print(error.localizedDescription)
+        }
         
         createUI()
     }
