@@ -53,23 +53,18 @@ class UserTableViewController: UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellID")
         
-        guard let userName = UserDefaults.standard.string(forKey: "UserName") else {
+        guard let userName = PFUser.current()?.username else {
             print("ERROR current user doesnt exist")
             self.navigationController?.popViewController(animated: true)
             return
         }
         userData.name = userName
-        
-        par.fetchUserList { (list, error) in
-            guard error == nil else {
-                print (error ?? "error while fetching user names")
-                return
-            }
-            if let listOfUsers = list {
-            self.userList = listOfUsers
-            self.tableView.reloadData() }
-        }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchUserList()
+    }
+    
     @objc func barbuttontapped() {
         self.navigationController?.pushViewController(AccountSettingsViewController(), animated: true)
     }
@@ -109,6 +104,19 @@ class UserTableViewController: UITableViewController {
         if let userName = cell?.textLabel?.text {
         UserDefaults.standard.set(userName, forKey: "targetUserName")
         self.navigationController?.pushViewController(UserProfileViewController(), animated: true)
+        }
+    }
+    
+    fileprivate func fetchUserList() {
+        par.fetchUserList { (list, error) in
+            guard error == nil else {
+                print (error ?? "error while fetching user names")
+                return
+            }
+            if let listOfUsers = list {
+                self.userList = listOfUsers
+                self.tableView.reloadData()
+            }
         }
     }
 }

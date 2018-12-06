@@ -26,6 +26,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         super.viewDidLoad()
         createUI()
         setUpHandlers()
+        loadCurrentUserData()
         
         guard let userName = UserDefaults.standard.string(forKey: "UserName") else {
             print("ERROR current user doesnt exist")
@@ -68,8 +69,6 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         let userimageView = UIView()
         userimageView.addSubview(avatarImage)
         userimageView.addSubview(updateUserImageButton)
-        
-        loadCurrentUserData()
         
         let nameRowsStackView = UIStackView(arrangedSubviews: [nameLabel, nameTextField])
         nameRowsStackView.axis = .vertical
@@ -139,9 +138,9 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
                 }
                 
                 if success {
-                self.activityIndicator.stopAnimating()
-                UIApplication.shared.endIgnoringInteractionEvents()
-                self.navigationController?.popToRootViewController(animated: true)
+                    self.activityIndicator.stopAnimating()
+                    UIApplication.shared.endIgnoringInteractionEvents()
+                    self.navigationController?.popToRootViewController(animated: true)
                 }
             })
     
@@ -156,7 +155,10 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
     }
     
     func loadCurrentUserData() {
-        par.fetchUserData(userName: (PFUser.current()?.username)!) { (userData, error) in
+        
+        guard let userName = PFUser.current()?.username else {return}
+        
+        par.fetchUserData(userName: userName) { (userData, error) in
             guard error == nil else {
                 var defaultErrorMessage = "Error while fetching data"
                 let error = error as NSError?

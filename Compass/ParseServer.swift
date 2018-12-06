@@ -15,6 +15,8 @@ class PServer {
         case objectNotFound
         case signUpError
         case savingError
+        case logInError
+        case errorWhileUnwappingData
     }
     
     func initParse(appID: String, clKey: String, serverAddress: String) {
@@ -41,9 +43,10 @@ class PServer {
                 return
             }
             if user != nil {
-            completition(user, nil)
-            return
+                completition(user, nil)
+                return
             }
+            completition(nil, MyError.logInError)
         }
     }
     
@@ -172,51 +175,56 @@ class PServer {
                 for object in users {
                     if let user = object as? PFUser {
                         if user.username != PFUser.current()?.username {
-                            result.append(user.username!)
+                            guard let userName = user.username else {return}
+                            result.append(userName)
                         }
                     }
                 }
                 completition(result, nil)
+                return
             }
+            completition(nil, MyError.errorWhileUnwappingData)
         })
     }
     
     func fetchUserData(userName: String, completion: @escaping (UserData?, Error?) -> Void) {
-            let result = UserData()
-            result.name = userName
-            let query = PFUser.query()
-            query?.findObjectsInBackground(block: { (objects, error) in
-                guard error == nil else {
-                    print(error ?? "error while fetching user names")
-                    completion(nil, error)
-                    return
-                }
-                guard let users = objects else {
+        let result = UserData()
+        result.name = userName
+        let query = PFUser.query()
+        query?.findObjectsInBackground(block: { (objects, error) in
+            guard error == nil else {
+                print(error ?? "error while fetching user names")
+                completion(nil, error)
+                return
+            }
+            guard let users = objects else {
+                completion(nil, nil)
+                return
+            }
+            for object in users {
+                guard let user = object as? PFUser else {
                     completion(nil, nil)
                     return
                 }
-                    for object in users {
-                        guard let user = object as? PFUser else {
-                            completion(nil, nil)
-                            return
-                        }
-                        if user.username == userName {
-                            if let userInfo = user.value(forKey: "userInfo") as? String {
-                                result.userInfo = userInfo}
-                            if let avatarPic = user.value(forKey: "avatar") as? PFFile {
-                                avatarPic.getDataInBackground { (imageData, error) in
-                                    if error == nil {
-                                        let image = UIImage(data:imageData!)
-                                        result.avatar = image!
-                                        completion(result, nil)
-                                    }else{
-                                        print(error ?? "error while fetching image")
-                                    }
-                                }
+                if user.username == userName {
+                    if let userInfo = user.value(forKey: "userInfo") as? String {
+                        result.userInfo = userInfo}
+                    if let avatarPic = user.value(forKey: "avatar") as? PFFile {
+                        avatarPic.getDataInBackground { (imageData, error) in
+                            if error == nil {
+                                let image = UIImage(data:imageData!)
+                                result.avatar = image!
+                                completion(result, nil)
+                                return
+                            } else {
+                                print(error ?? "error while fetching image")
                             }
                         }
                     }
-            })
+                }
+            }
+            completion(nil, MyError.errorWhileUnwappingData)
+        })
     }
     
     func saveUserData(userData: UserData, completion: @escaping (Bool, Error?) -> Void){
