@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0EB05E34ED17862BAB4A88B9 /* Pods_Compass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */; };
-		40181F1121A62C3800DB9123 /* compassIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 40181F1021A62C3800DB9123 /* compassIcon.png */; };
+		403413A021C0004D00A186EB /* ChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4034139F21C0004D00A186EB /* ChatTableViewController.swift */; };
 		404458682180CF300058E7F6 /* accountimg.png in Resources */ = {isa = PBXBuildFile; fileRef = 404458672180CF300058E7F6 /* accountimg.png */; };
 		4044586A2180ED980058E7F6 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404458692180ED980058E7F6 /* AccountSettingsViewController.swift */; };
 		405691CA21923B9A00534E7C /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405691C921923B9A00534E7C /* UserProfileViewController.swift */; };
@@ -40,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		40181F1021A62C3800DB9123 /* compassIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = compassIcon.png; path = ../../../../compassIcon.png; sourceTree = "<group>"; };
+		4034139F21C0004D00A186EB /* ChatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewController.swift; sourceTree = "<group>"; };
 		404458672180CF300058E7F6 /* accountimg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = accountimg.png; sourceTree = "<group>"; };
 		404458692180ED980058E7F6 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
 		405691C921923B9A00534E7C /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
@@ -117,11 +117,11 @@
 				40A2BD4D2149766500340F9F /* ParseServer.swift */,
 				40D382F3216C14A8001393D5 /* LoginViewController.swift */,
 				40D382F521700D7B001393D5 /* UserTableViewController.swift */,
+				4034139F21C0004D00A186EB /* ChatTableViewController.swift */,
 				404458692180ED980058E7F6 /* AccountSettingsViewController.swift */,
 				405691C921923B9A00534E7C /* UserProfileViewController.swift */,
 				405E219A212B0153009B1062 /* Assets.xcassets */,
 				404458672180CF300058E7F6 /* accountimg.png */,
-				40181F1021A62C3800DB9123 /* compassIcon.png */,
 				405691CB21947BC200534E7C /* noavatar.png */,
 				405691CD2194E55700534E7C /* updImage.png */,
 				40D382F1216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png */,
@@ -247,7 +247,6 @@
 				405691CE2194E55700534E7C /* updImage.png in Resources */,
 				405691CC21947BC200534E7C /* noavatar.png in Resources */,
 				404458682180CF300058E7F6 /* accountimg.png in Resources */,
-				40181F1121A62C3800DB9123 /* compassIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +314,7 @@
 				40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */,
 				405691CA21923B9A00534E7C /* UserProfileViewController.swift in Sources */,
 				40ECDF0221413EEA00B1947D /* Calculations.swift in Sources */,
+				403413A021C0004D00A186EB /* ChatTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

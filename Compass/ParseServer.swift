@@ -266,6 +266,79 @@ class PServer {
         }
        return nil
     }
+    
+    func saveNewChat(user1: String, user2: String, chatMessage: [String]) {
+        let parseObject = PFObject(className: "ChatMessages")
+        parseObject["Participants"] = [user1, user2]
+        parseObject["Messages"] = [chatMessage]
+        parseObject.saveInBackground { (success, error) in
+            guard error == nil else {
+                return
+            }
+            if success {
+                print("New chat messages object saved")
+            }
+        }
+    }
+    
+    func saveChatMessage(user1: String, user2: String, chatMessage: [String]) {
+        
+        let query = PFQuery(className: "ChatMessages")
+        query.whereKey("Participants", containsAllObjectsIn: [user1, user2])
+        query.findObjectsInBackground { (ChatObjects, error) in
+            guard error == nil else {
+                return
+            }
+            
+            guard let UpdatedChatObjects = ChatObjects?.first else {
+                print("Chat objects cannot be found")
+                self.saveNewChat(user1: user1, user2: user2, chatMessage: chatMessage)
+                return
+            }
+            
+            if var messages = UpdatedChatObjects["Messages"] as? [[String]] {
+                print("yaaay query works")
+                messages.append(chatMessage)
+                UpdatedChatObjects["Messages"] = messages
+                
+                UpdatedChatObjects.saveInBackground(block: { (success, error) in
+                    guard error == nil else {
+                        print("failed to save chat")
+                        return
+                    }
+                    if success {
+                        print("object been updated")
+                    }
+                })
+            }
+        }
+    }
+    
+    func fetchChat(user1: String, user2: String, completion: @escaping ([ChatMessage]?, Error?) -> Void) {
+        var result = [ChatMessage]()
+        
+        let query = PFQuery(className: "ChatMessages")
+        query.whereKey("Participants", containsAllObjectsIn: [user1, user2])
+        query.getFirstObjectInBackground { (ChatObject, error) in
+            guard error == nil else {
+                completion(nil, error)
+                return
+            }
+            guard let ChatObject = ChatObject else {
+                completion(nil, MyError.errorWhileUnwappingData)
+                return
+            }
+            
+            if let messages = ChatObject["Messages"] as? [[String]] {
+                for message in messages {
+                    let chatMessage = ChatMessage(sender: message[0], text: message[1], date: message[2])
+                    result.append(chatMessage)
+                }
+                completion(result, nil)
+                return
+            }
+        }
+    }
 }
 
 class UserData {
@@ -288,4 +361,10 @@ struct ServerCredentials: Decodable {
         clKey = json["clKey"] as? String ?? ""
         serverAddress = json["serverAddress"] as? String ?? ""
     }
+}
+
+struct ChatMessage {
+    let sender: String
+    let text: String
+    let date: String
 }
