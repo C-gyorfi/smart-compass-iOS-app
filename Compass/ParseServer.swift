@@ -223,7 +223,8 @@ class PServer {
                     }
                 }
             }
-            completion(nil, MyError.errorWhileUnwappingData)
+            //this will return an error even on completition
+            //completion(nil, MyError.errorWhileUnwappingData)
         })
     }
     
@@ -268,9 +269,14 @@ class PServer {
     }
     
     func saveNewChat(user1: String, user2: String, chatMessage: [String]) {
+        //temp solution should give access to user1 and user2
+        let acl = PFACL()
+        acl.hasPublicWriteAccess = true
+        acl.hasPublicReadAccess = true
         let parseObject = PFObject(className: "ChatMessages")
         parseObject["Participants"] = [user1, user2]
         parseObject["Messages"] = [chatMessage]
+        parseObject.acl = acl
         parseObject.saveInBackground { (success, error) in
             guard error == nil else {
                 return
@@ -281,7 +287,7 @@ class PServer {
         }
     }
     
-    func saveChatMessage(user1: String, user2: String, chatMessage: [String]) {
+    func saveChatMessage(user1: String, user2: String, chatMessage: [String], completion: @escaping (Bool, Error?) -> Void) {
         
         let query = PFQuery(className: "ChatMessages")
         query.whereKey("Participants", containsAllObjectsIn: [user1, user2])
@@ -304,10 +310,13 @@ class PServer {
                 UpdatedChatObjects.saveInBackground(block: { (success, error) in
                     guard error == nil else {
                         print("failed to save chat")
+                        completion(false, error)
                         return
                     }
                     if success {
                         print("object been updated")
+                        completion(true, nil)
+                        return
                     }
                 })
             }

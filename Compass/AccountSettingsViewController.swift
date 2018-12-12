@@ -160,6 +160,7 @@ class AccountSettingsViewController: UIViewController, UINavigationControllerDel
         
         par.fetchUserData(userName: userName) { (userData, error) in
             guard error == nil else {
+                print(error)
                 var defaultErrorMessage = "Error while fetching data"
                 let error = error as NSError?
                 if let errorMessage = error?.userInfo["error"] as? String {
