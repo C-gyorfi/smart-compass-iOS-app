@@ -10,10 +10,10 @@ import CoreLocation
 
 class Calculations {
     
-    func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
-    func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+   static func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+   static func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
     
-    func getBearingBetweenTwoPoints1(point1 : CLLocation, point2 : CLLocation) -> Double {
+   static func getBearingBetweenTwoPoints1(point1 : CLLocation, point2 : CLLocation) -> Double {
         
         let lat1 = degreesToRadians(degrees: point1.coordinate.latitude)
         let lon1 = degreesToRadians(degrees: point1.coordinate.longitude)

@@ -20,17 +20,38 @@ class LoginViewController: UIViewController {
     let loginButton = UIButton(frame: CGRect.zero)
     let switchPageButton = UIButton(frame: CGRect.zero)
     let par = PServer()
-    let userData = UserData()
+    public let userData = UserData()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        par.initParse(appID: "492795c6ea25112881915677092fb19d95f43ce0", clKey: "6c4448eb0dc5d344a0ca35f8d8f978ff82b76028", serverAddress: "http://18.188.82.67:80/parse")
+        //get server credentials from JSON file
+        do {
+            guard let path = Bundle.main.path(forResource: "server", ofType: "json") else {return}
+            let jsonData = try Data(contentsOf: URL(fileURLWithPath: path))
+            
+            do {
+                guard let jsonSerialized = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: Any] else {return}
+                
+                let credentials = ServerCredentials(json: jsonSerialized)
+                //could be even more simple using JSONDecoder:
+                //let credentials = try JSONDecoder().decode(ServerCredentials.self, from: jsonData)
+                par.initParse(appID: credentials.appID, clKey: credentials.clKey, serverAddress: credentials.serverAddress)
+                
+            } catch let error{
+                print(error.localizedDescription)
+            }
+        } catch let error {
+            print(error.localizedDescription)
+        }
         
+        createUI()
+    }
+    
+    private func createUI() {
         navigationController?.navigationBar.barTintColor = UIColor.black
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.cyan]
-        navigationItem.title = "Login Page"
         self.view.backgroundColor = UIColor.darkGray
         
         titleLabel.textColor = UIColor.red
@@ -40,11 +61,10 @@ class LoginViewController: UIViewController {
         switchPageButton.setTitle("Not registered? SignUp", for: .normal)
         switchPageButton.addTarget(self, action: #selector(SwitchPagePressed), for: .touchUpInside)
         
-        nameTextField.placeholder = "e-mail address..."
         nameTextField.text = "test@mail.co.uk"
         nameTextField.textColor = UIColor.white
         nameTextField.layer.backgroundColor = UIColor.blue.cgColor
-        nameTextField.attributedPlaceholder = NSAttributedString(string: "Name...", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        nameTextField.attributedPlaceholder = NSAttributedString(string: "e-mail address...", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         
         
         passTextField.placeholder = "password..."
@@ -75,9 +95,13 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([stackView.widthAnchor.constraint(equalToConstant: 200),
                                      stackView.centerXAnchor.constraint(lessThanOrEqualTo: self.view.centerXAnchor),
                                      stackView.centerYAnchor.constraint(lessThanOrEqualTo: self.view.centerYAnchor)])
-        
-        
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if PFUser.current() != nil {
+            let viewController = UserTableViewController(parseServer: par)
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -108,11 +132,9 @@ class LoginViewController: UIViewController {
             
             //clear previous login data
             UserDefaults.standard.removeObject(forKey: "locationObjectId")
-            
-            PFUser.logInWithUsername(inBackground: nameTextField.text!, password: passTextField.text!) { (user, error) in
+            par.logIn(userName: nameTextField.text!, pass: passTextField.text!) { (user, error) in
                 self.activityIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
-            
                 if error != nil {
                     
                     var displayErrorMessage = "Please try again later"
@@ -125,47 +147,29 @@ class LoginViewController: UIViewController {
                     self.createAlert(title: "Error:", message: displayErrorMessage)
                 } else {
                     self.userData.name = self.nameTextField.text!
-                    self.userData.location = CLLocation(latitude: 0, longitude: 0)
-                    
                     //the getObjectId func fetch the location object id from server or save a new location object for this user
                     self.par.getObjectId(classN: "Locations", uData: self.userData)
                     UserDefaults.standard.set(self.nameTextField.text!, forKey: "UserName")
-                    self.navigationController?.pushViewController(UserTableViewController(), animated: true)
+                    self.navigationController?.pushViewController(UserTableViewController(parseServer: self.par), animated: true)
                 }
             }
-        }
-        else {
-
-            //This code is a temp solution to create a new user on server
-            let user = PFUser()
-            user.username = nameTextField.text
-            user.email = nameTextField.text
-            user.password = passTextField.text
             
-            user.signUpInBackground { (success, error) in
+        } else {
+            par.SignUp(userName: nameTextField.text!, pass: passTextField.text!) { (success, error) in
                 self.activityIndicator.stopAnimating()
                 UIApplication.shared.endIgnoringInteractionEvents()
-                
                 guard error == nil else {
-                    
                     var displayErrorMessage = "Please try again later"
                     
                     let error = error as NSError?
                     
                     if let errorMessage = error?.userInfo["error"] as? String {
-                        
                         displayErrorMessage = errorMessage
-                        
                     }
                     self.createAlert(title: "Error:", message: displayErrorMessage)
                     return
                 }
-                
                 if success {
-                    
-                    self.userData.name = self.nameTextField.text!
-                    self.userData.location = CLLocation(latitude: 51.4885993, longitude: -0.0235309)
-                    self.par.saveUserLocation(classN: "Locations", uData: self.userData)
                     self.SwitchPagePressed()
                 }
             }
