@@ -6,21 +6,21 @@ Be aware this is an incomplete project, therefore the code might appear a bit ne
 I might clean it up or add new features in the future. In the mean-time, I hope you find it interesting or useful.
 
 ### Login page and users page
-![login](login.png)
+![login](login.png | width=100)
 -
-![users](users.png)
+![users](users.png | width=100)
 
 ### Account settings and profile page
-![login](useraccount.png)
+![login](useraccount.png | width=100)
 -
-![users](profile.png)
+![users](profile.png | width=100)
 
 ### Compass 
-![compass](compass_01.png)
+![compass](compass_01.png | width=100)
 -
-![compass](compass_02.png)
+![compass](compass_02.png | width=100)
 
 ### Chat
-![fork](chat01.png)
+![fork](chat01.png | width=100)
 _
-![fork](chat02.png)
+![fork](chat02.png | width=100)
