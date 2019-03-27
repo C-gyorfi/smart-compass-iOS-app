@@ -19,6 +19,15 @@
 		405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 405E2197212B0151009B1062 /* Compass.xcdatamodeld */; };
 		405E219B212B0153009B1062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405E219A212B0153009B1062 /* Assets.xcassets */; };
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
+		408D6007224C3D7300C8CEEE /* chat01.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D5FFF224C3D7200C8CEEE /* chat01.png */; };
+		408D6008224C3D7300C8CEEE /* login.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6000224C3D7200C8CEEE /* login.png */; };
+		408D6009224C3D7300C8CEEE /* useraccount.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6001224C3D7200C8CEEE /* useraccount.png */; };
+		408D600A224C3D7300C8CEEE /* chat02.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6002224C3D7200C8CEEE /* chat02.png */; };
+		408D600B224C3D7300C8CEEE /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6003224C3D7200C8CEEE /* users.png */; };
+		408D600C224C3D7300C8CEEE /* compass_02.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6004224C3D7200C8CEEE /* compass_02.png */; };
+		408D600D224C3D7300C8CEEE /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6005224C3D7200C8CEEE /* profile.png */; };
+		408D600E224C3D7300C8CEEE /* compass_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 408D6006224C3D7200C8CEEE /* compass_01.png */; };
+		408D6010224C3FFF00C8CEEE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 408D600F224C3FFF00C8CEEE /* README.md */; };
 		40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD4D2149766500340F9F /* ParseServer.swift */; };
 		40A2BD56214ABBD000340F9F /* CalculationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD55214ABBD000340F9F /* CalculationsTest.swift */; };
 		40A2BD5D214ABF4E00340F9F /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
@@ -53,6 +62,15 @@
 		405E219A212B0153009B1062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		405E219F212B0153009B1062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		405E21A6212B03E2009B1062 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		408D5FFF224C3D7200C8CEEE /* chat01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chat01.png; sourceTree = "<group>"; };
+		408D6000224C3D7200C8CEEE /* login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login.png; sourceTree = "<group>"; };
+		408D6001224C3D7200C8CEEE /* useraccount.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = useraccount.png; sourceTree = "<group>"; };
+		408D6002224C3D7200C8CEEE /* chat02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chat02.png; sourceTree = "<group>"; };
+		408D6003224C3D7200C8CEEE /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
+		408D6004224C3D7200C8CEEE /* compass_02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass_02.png; sourceTree = "<group>"; };
+		408D6005224C3D7200C8CEEE /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile.png; sourceTree = "<group>"; };
+		408D6006224C3D7200C8CEEE /* compass_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass_01.png; sourceTree = "<group>"; };
+		408D600F224C3FFF00C8CEEE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		40A2BD4D2149766500340F9F /* ParseServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseServer.swift; sourceTree = "<group>"; };
 		40A2BD53214ABBD000340F9F /* CompassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CompassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A2BD55214ABBD000340F9F /* CalculationsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationsTest.swift; sourceTree = "<group>"; };
@@ -90,6 +108,8 @@
 		405E2184212B0151009B1062 = {
 			isa = PBXGroup;
 			children = (
+				408D600F224C3FFF00C8CEEE /* README.md */,
+				408D5FFD224C3C0D00C8CEEE /* Readme_img */,
 				405E218F212B0151009B1062 /* Compass */,
 				40A2BD54214ABBD000340F9F /* CompassTests */,
 				405E218E212B0151009B1062 /* Products */,
@@ -138,6 +158,21 @@
 				97A1D6EAF5AEC3709AD135B7 /* Pods_Compass.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		408D5FFD224C3C0D00C8CEEE /* Readme_img */ = {
+			isa = PBXGroup;
+			children = (
+				408D5FFF224C3D7200C8CEEE /* chat01.png */,
+				408D6002224C3D7200C8CEEE /* chat02.png */,
+				408D6006224C3D7200C8CEEE /* compass_01.png */,
+				408D6004224C3D7200C8CEEE /* compass_02.png */,
+				408D6000224C3D7200C8CEEE /* login.png */,
+				408D6005224C3D7200C8CEEE /* profile.png */,
+				408D6001224C3D7200C8CEEE /* useraccount.png */,
+				408D6003224C3D7200C8CEEE /* users.png */,
+			);
+			name = Readme_img;
 			sourceTree = "<group>";
 		};
 		40A2BD54214ABBD000340F9F /* CompassTests */ = {
@@ -241,12 +276,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				408D600D224C3D7300C8CEEE /* profile.png in Resources */,
 				405E219B212B0153009B1062 /* Assets.xcassets in Resources */,
 				40D351D521B98C040013BA91 /* server.json in Resources */,
+				408D6009224C3D7300C8CEEE /* useraccount.png in Resources */,
+				408D600B224C3D7300C8CEEE /* users.png in Resources */,
+				408D600C224C3D7300C8CEEE /* compass_02.png in Resources */,
 				40D382F2216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png in Resources */,
 				405691CE2194E55700534E7C /* updImage.png in Resources */,
+				408D600A224C3D7300C8CEEE /* chat02.png in Resources */,
 				405691CC21947BC200534E7C /* noavatar.png in Resources */,
+				408D6008224C3D7300C8CEEE /* login.png in Resources */,
+				408D600E224C3D7300C8CEEE /* compass_01.png in Resources */,
+				408D6010224C3FFF00C8CEEE /* README.md in Resources */,
 				404458682180CF300058E7F6 /* accountimg.png in Resources */,
+				408D6007224C3D7300C8CEEE /* chat01.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
