@@ -9,13 +9,15 @@
 import UIKit
 import Parse
 
-class ChatTableViewController: UITableViewController {
+class ChatTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     fileprivate let cellId = "id"
     let parse = PServer()
     var messagesFromServer = [ChatMessage]()
     let textField = UITextField()
     let sendButton = UIButton()
+    let tableView = UITableView()
+    @IBOutlet weak var textFieldBottomConstaint: NSLayoutConstraint!
     
     private func createUI(){
         
@@ -34,7 +36,6 @@ class ChatTableViewController: UITableViewController {
         textField.backgroundColor = UIColor.gray
         textField.textColor = UIColor.white
         textField.layer.cornerRadius = 14
-        textField.sizeToFit()
         
         let textFieldStack = UIStackView(arrangedSubviews: [textField, sendButton])
         textFieldStack.axis = .horizontal
@@ -42,10 +43,19 @@ class ChatTableViewController: UITableViewController {
         
         self.view.addSubview(textFieldStack)
         textFieldStack.translatesAutoresizingMaskIntoConstraints = false
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([textFieldStack.heightAnchor.constraint(equalToConstant: 80),
-                                     textFieldStack.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor),
-                                     textFieldStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)])
+        self.view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([textField.widthAnchor.constraint(equalToConstant: 120),
+                                    textFieldStack.heightAnchor.constraint(equalToConstant: 50),
+                                     textFieldStack.widthAnchor.constraint(equalToConstant: 180),
+                                     textFieldStack.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+                                     textFieldStack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+                                     tableView.bottomAnchor.constraint(equalTo: textFieldStack.topAnchor),
+                                     tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+                                     tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+                                     tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor)])
         }
     
     private func setUpHandlers() {
@@ -100,6 +110,19 @@ class ChatTableViewController: UITableViewController {
         super.viewDidLoad()
         createUI()
         setUpHandlers()
+        tableView.dataSource = self
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+
+    }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        view.frame.origin.y = -214
+    }
+    
+    @objc func keyboardWillHide(notification: Notification) {
+        
+        view.frame.origin.y = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -110,21 +133,26 @@ class ChatTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messagesFromServer.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ChatMessageCell
         cell.chatMessage = messagesFromServer[indexPath.row]
         return cell
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("recognised")
+        textField.resignFirstResponder()
+    }
+    
+    public func releaseKeyboard() {
         textField.resignFirstResponder()
     }
 }
