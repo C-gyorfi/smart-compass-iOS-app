@@ -7,20 +7,20 @@ I might clean it up or add new features in the future. In the mean-time, I hope 
 
 ### Login page and users page
 ![login](ReadmeImg/login.png)
--
+
 ![users](ReadmeImg/users.png)
 
 ### Account settings and profile page
 ![login](ReadmeImg/useraccount.png)
--
+
 ![users](ReadmeImg/profile.png)
 
 ### Compass 
 ![compass](ReadmeImg/compass_01.png)
--
+
 ![compass](ReadmeImg/compass_02.png)
 
 ### Chat
 ![fork](ReadmeImg/chat01.png)
-_
+
 ![fork](ReadmeImg/chat02.png)
