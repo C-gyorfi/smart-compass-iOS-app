@@ -6,21 +6,21 @@ Be aware this is an incomplete project, therefore the code might appear a bit ne
 I might clean it up or add new features in the future. In the mean-time, I hope you find it interesting or useful.
 
 ### Login page and users page
-![login](login.png){:height="50%" width="50%"}
+![login](ReadmeImg/login.png)
 -
-![users](users.png){:height="50%" width="50%"}
+![users](ReadmeImg/users.png)
 
 ### Account settings and profile page
-![login](useraccount.png){:height="50%" width="50%"}
+![login](ReadmeImg/useraccount.png)
 -
-![users](profile.png){:height="50%" width="50%"}
+![users](ReadmeImg/profile.png)
 
 ### Compass 
-![compass](compass_01.png){:height="50%" width="50%"}
+![compass](ReadmeImg/compass_01.png)
 -
-![compass](compass_02.png){:height="50%" width="50%"}
+![compass](ReadmeImg/compass_02.png)
 
 ### Chat
-![fork](chat01.png){:height="50%" width="50%"}
+![fork](ReadmeImg/chat01.png)
 _
-![fork](chat02.png){:height="50%" width="50%"}
+![fork](ReadmeImg/chat02.png)
