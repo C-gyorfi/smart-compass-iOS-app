@@ -21,6 +21,7 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
     
     let ArrowImage = UIImageView(image: UIImage(named: "240px-Green_Arrow_Up_Darker.png"))
     let degreeLabel = UILabel(frame: CGRect.zero)
+    let targetLabel = UILabel(frame: CGRect.zero)
     let distanceLabel = UILabel(frame: CGRect.zero)
     let setTargetLocationButton = UIButton(frame: CGRect.zero)
     let backButton = UIButton(frame: CGRect.zero)
@@ -62,17 +63,9 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
         self.view.backgroundColor = UIColor.darkGray
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.green]
         navigationItem.title = "Compass"
-        degreeLabel.text = "Dir Degree->"
-        distanceLabel.text = "Calculating distance..."
         self.view.addSubview(degreeLabel)
         self.view.addSubview(distanceLabel)
         self.view.addSubview(ArrowImage)
-        
-        //setTargetLocationButton.setTitle("Set Target Location", for: .normal)
-        //self.view.addSubview(setTargetLocationButton)
-//        setTargetLocationButton.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([ setTargetLocationButton.centerXAnchor.constraint(lessThanOrEqualTo:     self.view.centerXAnchor),
-//                                      setTargetLocationButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 140)])
         
         degreeLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([ degreeLabel.centerXAnchor.constraint(lessThanOrEqualTo:self.view.centerXAnchor),
@@ -143,7 +136,11 @@ class CompassViewController: UIViewController, CLLocationManagerDelegate {
               let distance = currentLocation?.distance(from: targetLocation) else {
             return
         }
-        distanceLabel.text = "\(Int(distance))m"
+        if (distance > 1000) {
+            distanceLabel.text = "Distance: \(Int(distance/1000))km"
+        } else {
+            distanceLabel.text = "Distance: \(Int(distance))m"
+        }
     }
     
     override func didReceiveMemoryWarning() {

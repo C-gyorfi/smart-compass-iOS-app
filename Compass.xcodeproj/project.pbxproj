@@ -19,6 +19,7 @@
 		405E2199212B0151009B1062 /* Compass.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 405E2197212B0151009B1062 /* Compass.xcdatamodeld */; };
 		405E219B212B0153009B1062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 405E219A212B0153009B1062 /* Assets.xcassets */; };
 		405E21A7212B03E2009B1062 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405E21A6212B03E2009B1062 /* CoreLocation.framework */; };
+		408D6010224C3FFF00C8CEEE /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 408D600F224C3FFF00C8CEEE /* README.md */; };
 		40A2BD4E2149766500340F9F /* ParseServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD4D2149766500340F9F /* ParseServer.swift */; };
 		40A2BD56214ABBD000340F9F /* CalculationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2BD55214ABBD000340F9F /* CalculationsTest.swift */; };
 		40A2BD5D214ABF4E00340F9F /* Calculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ECDF0121413EEA00B1947D /* Calculations.swift */; };
@@ -53,6 +54,7 @@
 		405E219A212B0153009B1062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		405E219F212B0153009B1062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		405E21A6212B03E2009B1062 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		408D600F224C3FFF00C8CEEE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		40A2BD4D2149766500340F9F /* ParseServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseServer.swift; sourceTree = "<group>"; };
 		40A2BD53214ABBD000340F9F /* CompassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CompassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A2BD55214ABBD000340F9F /* CalculationsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationsTest.swift; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 		405E2184212B0151009B1062 = {
 			isa = PBXGroup;
 			children = (
+				408D600F224C3FFF00C8CEEE /* README.md */,
 				405E218F212B0151009B1062 /* Compass */,
 				40A2BD54214ABBD000340F9F /* CompassTests */,
 				405E218E212B0151009B1062 /* Products */,
@@ -246,6 +249,7 @@
 				40D382F2216ACFCE001393D5 /* 240px-Green_Arrow_Up_Darker.png in Resources */,
 				405691CE2194E55700534E7C /* updImage.png in Resources */,
 				405691CC21947BC200534E7C /* noavatar.png in Resources */,
+				408D6010224C3FFF00C8CEEE /* README.md in Resources */,
 				404458682180CF300058E7F6 /* accountimg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
